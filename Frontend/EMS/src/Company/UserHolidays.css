@@ -1,0 +1,73 @@
+/* PAGE */
+.holiday-page {
+  padding: 20px;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.holiday-header {
+  margin-bottom: 20px;
+}
+
+.holiday-header h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+  color: #1e293b;
+}
+
+/* TABLE WRAPPER */
+.holiday-table-wrapper {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+/* TABLE */
+.holiday-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* HEADER ROW */
+.holiday-table thead {
+  background: #f1f5f9;
+}
+
+.holiday-table th {
+  text-align: left;
+  padding: 12px;
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* BODY */
+.holiday-table td {
+  padding: 12px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #334155;
+}
+
+/* ROW HOVER */
+.holiday-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* ICON */
+.holiday-table td svg {
+  margin-right: 6px;
+  color: #0ea5e9;
+}
+
+/* EMPTY STATE */
+.holiday-table td[colspan] {
+  text-align: center;
+  padding: 20px;
+  color: #94a3b8;
+  font-size: 14px;
+}

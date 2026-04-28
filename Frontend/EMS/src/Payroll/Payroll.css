@@ -1,0 +1,886 @@
+/* =========================
+   PAGE LAYOUT
+========================= */
+.payroll-page {
+  display: flex;
+  height: calc(100vh - 70px);
+  background: #f5f6fa;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+ 
+/* =========================
+   LEFT PANEL
+========================= */
+.employee-panel {
+  width: 300px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
+}
+ 
+/* =========================
+   HEADER
+========================= */
+.payroll-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+ 
+.employee-panel h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+}
+ 
+/* =========================
+   SEARCH BOX
+========================= */
+.search-box {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  font-size: 14px;
+  margin-bottom: 15px;
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+ 
+.search-box:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+ 
+.search-box:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+ 
+/* =========================
+   EMPLOYEE LIST
+========================= */
+.employee-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+ 
+.employee-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 1px solid transparent;
+  gap: 12px;
+}
+ 
+.employee-card:hover {
+  background: #f3f4f6;
+}
+ 
+.employee-card.disabled-card {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+ 
+/* ACTIVE EMPLOYEE */
+.employee-card.active {
+  border: 2px solid #2563eb;
+  background: #eef4ff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
+}
+ 
+.employee-card.active:hover {
+  background: #e8f0ff;
+}
+ 
+.employee-card strong {
+  font-size: 14px;
+}
+ 
+.employee-card p {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 3px;
+  margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ 
+.employee-card strong {
+  font-size: 14px;
+  font-weight: 600;
+ 
+  white-space: normal;      /* allow wrap */
+  word-break: break-word;   /* break long names */
+  overflow: hidden;
+}
+ 
+.emp-name {
+  white-space: normal;      /* allow wrapping */
+  word-break: break-word;
+  line-height: 1.3;
+  max-width: 220px;         /* controls where it breaks */
+}
+
+.recent-table td:first-child {
+  white-space: normal !important;
+}
+
+.dept {
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+ 
+/* =========================
+   RIGHT PANEL
+========================= */
+.payroll-content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+  height: 100%;
+  position: relative;
+}
+ 
+/* =========================
+   EMPLOYEE HEADER
+========================= */
+.employee-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+ 
+.employee-header h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+ 
+.employee-header p {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+ 
+.employee-header-info {
+  flex: 1;
+  min-width: 220px;
+}
+ 
+.avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #10b981;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+ 
+.bulk-avatar {
+  background: #2563eb !important;
+}
+ 
+/* =========================
+   COMMON CARD STYLE
+========================= */
+.ctc-card,
+.generate-card,
+.recent-table,
+.selected-summary-card {
+  background: white;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+ 
+.generate-card h4,
+.recent-table h4,
+.selected-summary-card h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  margin-top: 0;
+  color: #111827;
+}
+ 
+/* =========================
+   INPUT / LABEL COMMON
+========================= */
+.ctc-card label,
+.manual-field label,
+.standard-periods label,
+.specific-period label,
+.mode-dropdown-wrapper label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  display: block;
+  margin-bottom: 6px;
+}
+ 
+.ctc-card input,
+.manual-field input,
+.period-buttons select,
+.mode-dropdown {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+  box-sizing: border-box;
+  background: #fff;
+}
+ 
+.ctc-card input:focus,
+.manual-field input:focus,
+.period-buttons select:focus,
+.mode-dropdown:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+ 
+.ctc-card input:disabled,
+.manual-field input:disabled,
+.period-buttons select:disabled,
+.mode-dropdown:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+ 
+.helper-text {
+  color: #666;
+  margin-top: 8px;
+  display: block;
+}
+ 
+/* =========================
+   PERIOD SECTION
+========================= */
+.period-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+ 
+.standard-periods,
+.specific-period {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+ 
+.specific-period .period-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+ 
+.specific-period .period-buttons select {
+  width: 150px;
+}
+ 
+.period-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+ 
+.period-buttons button {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+ 
+.period-buttons button:hover {
+  background: #e5e7eb;
+}
+ 
+.period-buttons button:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+ 
+.period-buttons button.active-period-btn {
+  background: #10b981;
+  color: #ffffff;
+  border: 1px solid #10b981;
+  box-shadow: 0 3px 8px rgba(16, 185, 129, 0.22);
+}
+ 
+.period-buttons button.active-period-btn:hover {
+  background: #059669;
+  border-color: #059669;
+}
+ 
+/* =========================
+   GENERATE BUTTON
+========================= */
+.generate-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  background: #10b981;
+  color: white;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+ 
+.generate-btn:hover {
+  background: #059669;
+}
+ 
+.generate-btn:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+ 
+/* =========================
+   MANUAL PAYSLIP GRID
+========================= */
+.manual-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 15px;
+}
+ 
+.manual-field {
+  display: flex;
+  flex-direction: column;
+}
+ 
+.manual-top-controls {
+  margin-bottom: 20px;
+}
+ 
+/* =========================
+   ALERT / MESSAGE
+========================= */
+.success-message,
+.error-message {
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid transparent;
+}
+ 
+.success-message {
+  background: #d1fae5;
+  color: #065f46;
+  border-color: #10b981;
+}
+ 
+.error-message {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #ef4444;
+}
+ 
+/* =========================
+   RECENT TABLE
+========================= */
+.table-scroll {
+  overflow-x: auto;
+  width: 100%;
+  padding: 5px;   /* add space inside */
+  box-sizing: border-box;
+}
+ 
+.table-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+ 
+.table-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+ 
+.recent-table table {
+  width: 100%;
+  min-width: 950px;
+  border-collapse: collapse;
+}
+ 
+thead th {
+  text-align: left;
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 600;
+  padding: 0 0 12px;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+ 
+tbody td {
+  padding: 14px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  color: #111827;
+}
+ 
+tbody tr:hover {
+  background: #fafafa;
+}
+ 
+.empid {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 3px;
+}
+ 
+/* =========================
+   ACTION ICONS
+========================= */
+.action-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  /* ❌ REMOVE height */
+}
+.recent-table td:last-child {
+  align-items: center;        /* vertical center */
+  justify-content: center;    /* horizontal center */
+  width: 120px;
+}
+
+.recent-table tbody tr {
+  height: auto;
+}
+
+tbody td {
+  vertical-align: middle;   /* ✅ keeps all columns aligned */
+}
+ 
+.view-icon,
+.download-icon {
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s;
+}
+ 
+.view-icon {
+  color: #6b7280;
+}
+ 
+.view-icon:hover {
+  color: #111827;
+  transform: scale(1.15);
+}
+ 
+.download-icon {
+  color: #2563eb;
+}
+ 
+.download-icon:hover {
+  color: #1e40af;
+  transform: scale(1.15);
+}
+ 
+/* =========================
+   SELECT ALL + CHECKBOX EMPLOYEE
+========================= */
+.select-all-row {
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+ 
+.select-all-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #111827;
+  cursor: pointer;
+  user-select: none;
+}
+ 
+.employee-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+ 
+.employee-left input[type="checkbox"],
+.select-all-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #2563eb;
+  flex-shrink: 0;
+}
+ 
+.employee-left input[type="checkbox"]:disabled,
+.select-all-label input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+}
+ 
+/* =========================
+   GENERATE CARD TITLE STATUS
+========================= */
+.generate-card h4 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+ 
+.selected-badge {
+  background: #eef4ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+ 
+/* =========================
+   BULK SELECTION SUMMARY
+========================= */
+.selected-summary-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+ 
+.selected-summary-chip {
+  background: #eef4ff;
+  border: 1px solid #bfdbfe;
+  color: #1e3a8a;
+  padding: 10px 12px;
+  border-radius: 12px;
+  min-width: 180px;
+}
+ 
+.selected-summary-chip span {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+}
+ 
+.selected-summary-chip small {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #64748b;
+}
+ 
+/* =========================
+   DISABLED PANEL
+========================= */
+.panel-disabled {
+  pointer-events: none;
+  opacity: 0.9;
+}
+ 
+/* =========================
+   GENERATING OVERLAY
+========================= */
+.generation-overlay {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #e5e7eb;
+  backdrop-filter: blur(4px);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+ 
+.generation-overlay p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+ 
+.generation-loader {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #dbeafe;
+  border-top: 3px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+ 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+ 
+/* =========================
+   REMOVE NUMBER INPUT ARROWS
+========================= */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+ 
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+ 
+/* =========================
+   SCROLLBAR
+========================= */
+.employee-panel::-webkit-scrollbar,
+.payroll-content::-webkit-scrollbar {
+  width: 6px;
+}
+ 
+.employee-panel::-webkit-scrollbar-thumb,
+.payroll-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+ 
+/* =========================
+   RESPONSIVE - TABLET
+========================= */
+@media (max-width: 1024px) {
+  .payroll-page {
+    flex-direction: column;
+    height: auto;
+    overflow: auto;
+  }
+ 
+  .employee-panel {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+ 
+  .payroll-content {
+    padding: 20px;
+    height: auto;
+  }
+ 
+  .period-section {
+    flex-direction: column;
+    gap: 20px;
+  }
+ 
+  .employee-header {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+ 
+/* =========================
+   RESPONSIVE - MOBILE
+========================= */
+@media (max-width: 640px) {
+  .payroll-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+ 
+  .employee-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+ 
+  .period-buttons {
+    gap: 8px;
+  }
+ 
+  .period-buttons button,
+  .period-buttons select,
+  .generate-btn {
+    width: 100%;
+  }
+ 
+  .manual-fields-grid {
+    grid-template-columns: 1fr;
+  }
+ 
+  .ctc-card,
+  .generate-card,
+  .recent-table,
+  .employee-header,
+  .selected-summary-card {
+    padding: 16px;
+  }
+ 
+  .payroll-content {
+    padding: 14px;
+  }
+ 
+  .employee-panel {
+    padding: 14px;
+  }
+ 
+  .employee-card {
+    align-items: flex-start;
+  }
+ 
+  .employee-left {
+    align-items: flex-start;
+  }
+ 
+  .employee-card > .dept {
+    margin-left: 0;
+    margin-top: 6px;
+  }
+ 
+  .select-all-row {
+    padding: 10px;
+  }
+ 
+  .selected-summary-chip {
+    min-width: 100%;
+  }
+}
+ 
+.recent-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+ 
+.recent-filters {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+ 
+.recent-filters select {
+  min-width: 140px;
+  padding: 10px 12px;
+  border: 1px solid #d9e1ec;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+ 
+.recent-filters select:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+ 
+/* =========================
+   RECENT TABLE PAGINATION
+========================= */
+.pagination-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 10px 6px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+ 
+.pagination-info {
+  font-size: 14px;
+  color: #555;
+}
+ 
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+ 
+.pagination-controls button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #1f4e79;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+ 
+.pagination-controls button:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+ 
+.pagination-controls button:disabled {
+  background: #c9d3df;
+  cursor: not-allowed;
+}
+ 
+.pagination-controls span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+ 

@@ -1,0 +1,481 @@
+/* ================= EMPLOYEE PAGE ================= */
+body {
+  background: #f5f7fa;
+  font-family: sans-serif;
+  overflow-x: hidden;
+}
+
+.emp-page-unique {
+  padding: 30px;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+/* ================= HEADER ================= */
+
+.emp-header-unique {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.emp-header-unique h2 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.emp-header-unique p {
+  color: #777;
+  font-size: 14px;
+}
+
+.emp-header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.emp-add-btn {
+  background: #0aa89e;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.emp-add-btn.secondary {
+  background: #e6f7f6;
+  color: #0aa89e;
+}
+
+/* ================= SEARCH ================= */
+
+.emp-search-box {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+/* ================= TABLE ================= */
+
+.emp-table-container {
+  background: white;
+  border-radius: 12px;
+  overflow-x: auto;   /* enables left-right scroll */
+  overflow-y: hidden;
+}
+
+
+.emp-table {
+  width: 100%;
+  min-width: 1000px;   /* forces horizontal scroll when screen is smaller */
+  border-collapse: collapse;
+}
+
+.emp-table thead {
+  background: #f1f5f9;
+  text-align: left;
+}
+
+.emp-table th,
+.emp-table td {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.emp-table tr:hover {
+  background: #fafafa;
+}
+
+/* ================= NAME & ID ================= */
+
+.emp-name {
+  font-weight: 500;
+}
+
+.emp-id {
+  font-size: 12px;
+  color: #777;
+  margin-top: 2px;
+}
+
+/* ================= STATUS ================= */
+
+.emp-status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.emp-active {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.emp-leave {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.emp-probation {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* ================= ACTION BUTTONS ================= */
+
+.action-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.edit-btn:hover {
+  background: #2563eb;
+}
+
+.delete-btn {
+  background: #e53935;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #d32f2f;
+}
+
+/* ================= MAIN MODAL ================= */
+
+.emp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.emp-modal-box {
+  background: #fff;
+  padding: 25px;
+  width: 500px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  max-height: 95vh;   /* limits modal height */
+  overflow-y: auto;   /* enables vertical scroll */
+}
+
+.emp-modal-box.small {
+  width: 400px;
+}
+
+.emp-modal-box input,
+.emp-modal-box select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+.emp-modal-box input:focus,
+.emp-modal-box select:focus {
+  border: 1px solid #16a34a;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.25);
+}
+
+.emp-modal-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.emp-save-btn {
+  background: teal;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.emp-close-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.emp-close-btn:hover {
+  background: #c0392b;
+}
+
+/* ================= MASTER LIST ================= */
+
+.master-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.master-item {
+  display: flex;
+  justify-content: space-between;
+  background: #f5f5f5;
+  padding: 6px 10px;
+  margin-bottom: 5px;
+  border-radius: 6px;
+}
+
+.master-item button {
+  border: none;
+  background: red;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.master-add {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.master-add input {
+  flex: 1;
+}
+
+/* ================= DELETE POPUP ================= */
+
+.emp-delete-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.emp-delete-modal {
+  background: #ffffff;
+  width: 420px;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+
+.emp-delete-modal h3 {
+  margin-bottom: 15px;
+}
+
+.emp-delete-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+/* Cancel button (grey small like screenshot) */
+.emp-delete-cancel-btn {
+  background: #e5e7eb;
+  color: #111827;
+  border: none;
+  padding: 6px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.emp-delete-cancel-btn:hover {
+  background: #d1d5db;
+}
+
+/* Delete button (red) */
+.emp-delete-btn {
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  padding: 6px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.emp-delete-btn:hover {
+  background: #dc2626;
+}
+
+.emp-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.emp-pagination button {
+  padding: 6px 12px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.emp-pagination button:hover {
+  background: #ddd;
+}
+
+.active-page {
+  background: #4f46e5;
+  color: white;
+}
+
+.emp-row-click:hover {
+  cursor: pointer;
+}
+
+/* ================= SCREEN PERMISSIONS ================= */
+
+.perm-title{
+margin-top:20px;
+margin-bottom:10px;
+font-size:18px;
+font-weight:600;
+color:#222;
+}
+
+.permissions-container{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:10px;
+}
+
+/* Custom scrollbar */
+
+.permissions-container::-webkit-scrollbar{
+width:6px;
+}
+
+.permissions-container::-webkit-scrollbar-thumb{
+background:#c7c7c7;
+border-radius:10px;
+}
+
+.permissions-container::-webkit-scrollbar-thumb:hover{
+background:#9e9e9e;
+}
+
+/* Permission row layout */
+
+.permission-row{
+display:grid;
+grid-template-columns:160px 1fr;
+align-items:center;
+gap:10px;
+padding:6px 0;
+}
+
+.permission-label{
+font-size:14px;
+font-weight:500;
+color:#333;
+}
+
+/* dropdown */
+
+.permission-select{
+height:38px;
+padding:6px 10px;
+border-radius:8px;
+border:1px solid #cbd5e1;
+background:#fff;
+font-size:14px;
+cursor:pointer;
+transition:0.2s ease;
+}
+
+.permission-select:focus{
+outline:none;
+border-color:#16a34a;
+box-shadow:0 0 0 2px rgba(22,163,74,0.25);
+}
+
+.form-error{
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.emp-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 250px;
+  max-width: 320px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  animation: slideIn 0.3s ease;
+}
+
+.emp-message.success {
+  background-color: #e6f9f0;
+  color: #1a7f37;
+}
+
+.emp-message.error {
+  background-color: #fdecea;
+  color: #d93025;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Fix joined date in single line */
+.emp-table td:nth-child(7),
+.emp-table th:nth-child(7) {
+  white-space: nowrap;
+}
+

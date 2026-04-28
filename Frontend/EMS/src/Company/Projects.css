@@ -1,0 +1,251 @@
+/* ================= PROJECTS PAGE ================= */
+body {
+  background: #f5f7fa;
+  font-family: sans-serif;
+  overflow-x: hidden;
+}
+
+.projects-page {
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ================= HEADER ================= */
+
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.projects-header h2 {
+  font-size: 21px;
+  margin-bottom: 5px;
+}
+
+.projects-add-btn {
+  background: #0aa89e;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.projects-add-btn:hover {
+  background: #08968e;
+}
+
+/* ================= TABLE WRAPPER ================= */
+
+.projects-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= TABLE ================= */
+
+.projects-table {
+  width: 100%;              /* ✅ FIXED */
+  border-collapse: collapse;
+  table-layout: auto;       /* keeps it flexible */
+}
+
+/* Remove forced large width */
+.projects-table thead {
+  background: #f3f4f6;
+}
+
+.projects-table th {
+  text-align: left;
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.projects-table td {
+  padding: 16px 18px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+  height: 60px;
+}
+
+.projects-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* ================= PROJECT NAME ================= */
+
+.projects-name {
+  display: flex;
+  flex-direction: column;
+}
+
+.projects-name span {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ================= TEXT TRUNCATE ================= */
+
+.projects-name strong,
+.projects-client,
+.projects-team,
+.projects-timeline {
+  display: block;
+  max-width: 160px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ================= STATUS ================= */
+
+.projects-status {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.projects-status.progress {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.projects-status.completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.projects-status.planning {
+  background: #fde68a;
+  color: #92400e;
+}
+
+/* ================= ACTION BUTTONS ================= */
+
+.projects-action-cell {
+  display: flex;
+  gap: 6px;
+}
+
+.projects-edit-btn {
+  background: #3b82f6;   /* blue */
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.projects-delete-btn {
+  background: #ef4444;   /* red */
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ================= ROW CLICK ================= */
+
+.projects-row-click {
+  cursor: pointer;
+}
+
+/* ================= MODAL ================= */
+
+.projects-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.projects-modal {
+  background: #fff;
+  padding: 25px;
+  width: 420px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.projects-modal input,
+.projects-modal select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* ================= POPUP DETAILS ================= */
+
+.projects-details {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.projects-detail-row {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 10px;
+  align-items: start;
+  background: #f7f9fc;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.projects-label {
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.projects-value {
+  color: #111827;
+  word-break: break-word;
+}
+
+/* ================= MODAL BTNS ================= */
+
+.projects-modal-btns {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.projects-save-btn {
+  background: #0aa89e;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.projects-modal.small {
+  width: 420px;
+  max-height: 80vh;
+  overflow-y: auto;
+}

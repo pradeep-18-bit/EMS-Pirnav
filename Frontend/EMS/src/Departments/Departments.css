@@ -1,0 +1,530 @@
+/* ================= PAGE ================= */
+body {
+  background: #f5f7fa;
+  font-family: sans-serif;
+  overflow-x: hidden;
+}
+.dept-page {
+  padding: 30px;
+  background: #f4f6f9;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* ================= HEADER ================= */
+
+.dept-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.dept-header h2 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dept-header p {
+  color: #6b7280;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.add-btn {
+  background: #10b981;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.add-btn:hover {
+  background: #059669;
+}
+
+/* ================= GRID ================= */
+
+.dept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* ================= CARD ================= */
+
+.dept-card {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.dept-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* ================= TOP SECTION ================= */
+
+.dept-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.dept-icon {
+  background: #e0f2fe;
+  color: #0284c7;
+  padding: 14px;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+/* ================= STATUS BADGE ================= */
+
+.dept-status {
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.dept-status.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.dept-status.inactive {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* ================= TEXT ================= */
+
+.dept-card h3 {
+  margin: 10px 0 8px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dept-head {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.dept-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ================= MENU BUTTON ================= */
+
+.dept-menu-wrapper {
+  position: absolute;
+  top: 5px;
+  right: 14px;
+}
+
+.dept-menu-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #9ca3af;
+}
+
+.dept-menu-btn:hover {
+  color: #111827;
+}
+
+/* ================= POPUP MENU ================= */
+
+.dept-popup-menu {
+  position: absolute;
+  top: 28px;
+  right: 0;
+  width: 120px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  padding: 6px 0;
+  animation: fadeScale 0.15s ease;
+  z-index: 100;
+}
+
+.dept-popup-menu button {
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.dept-popup-menu button:hover {
+  background: #f3f4f6;
+}
+
+.dept-popup-menu .delete {
+  color: #dc2626;
+}
+
+/* ================= TOP SECTION ================= */
+
+.dept-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.dept-icon {
+  background: #e0f2fe;
+  color: #0284c7;
+  padding: 10px;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+/* ================= STATUS ================= */
+
+.dept-status {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.dept-status.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.dept-status.inactive {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* ================= TEXT ================= */
+
+.dept-card h3 {
+  margin: 15px 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dept-head {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.dept-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ================= MODAL ================= */
+
+.dept-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.dept-modal-box {
+  width: 380px;
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: modalFade 0.25s ease;
+}
+
+/* ================= INPUTS ================= */
+
+.dept-modal-box input,
+.dept-modal-box select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.dept-modal-box input:focus,
+.dept-modal-box select:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+  outline: none;
+}
+
+/* ================= MODAL BUTTONS ================= */
+
+.dept-modal-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.dept-modal-btns button:first-child {
+  background: #e5e7eb;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.dept-modal-btns button:first-child:hover {
+  background: #d1d5db;
+}
+
+.dept-save-btn {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.dept-save-btn:hover {
+  background: #059669;
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 600px) {
+  .dept-modal-box {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .dept-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+/* ================= DELETE OVERLAY ================= */
+
+.delete-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  /* backdrop-filter: blur(3px); */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  animation: fadeInOverlay 0.2s ease;
+}
+
+/* ================= DELETE MODAL BOX ================= */
+
+.delete-modal {
+  width: 380px;
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  animation: scaleIn 0.25s ease;
+}
+
+.delete-modal h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.delete-modal p {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+/* ================= BUTTONS ================= */
+
+.delete-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.cancel-btn {
+  background: #e5e7eb;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background: #d1d5db;
+}
+
+.confirm-delete-btn {
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.confirm-delete-btn:hover {
+  background: #dc2626;
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ===== FIX MODAL OVERLAY ===== */
+.dept-modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 9999 !important;
+  padding: 20px !important;
+}
+
+/* ===== FIX MODAL BOX ===== */
+.dept-modal-box {
+  width: 420px !important;
+  max-height: 80vh !important;
+  overflow-y: auto !important;
+  background: #ffffff !important;
+  padding: 20px !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ===== EMPLOYEE LIST FIX ===== */
+.dept-modal-box div {
+  font-size: 14px !important;
+}
+
+.dept-modal-box div b {
+  color: #111827 !important;
+  font-weight: 600 !important;
+}
+
+/* spacing + divider */
+.dept-modal-box div:not(:last-child) {
+  border-bottom: 1px solid #eee !important;
+  padding: 8px 0 !important;
+}
+
+/* ===== SCROLLBAR ===== */
+.dept-modal-box::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.dept-modal-box::-webkit-scrollbar-thumb {
+  background: #d1d5db !important;
+  border-radius: 10px !important;
+}
+
+/* ===== CLOSE BUTTON ===== */
+.dept-modal-box button {
+  align-self: flex-end !important;
+  margin-top: 10px !important;
+  padding: 6px 14px !important;
+  border: none !important;
+  background: #10b981 !important;
+  color: white !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+}
+
+/* ===== TITLE ===== */
+.dept-modal-box h3 {
+  margin-bottom: 10px !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+}

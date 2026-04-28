@@ -1,0 +1,173 @@
+.task-page{
+padding:30px;
+}
+
+.task-header{
+margin-bottom:20px;
+}
+
+.task-header h2{
+font-size:24px;
+margin-bottom:5px;
+}
+
+.task-table{
+background:white;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+overflow:hidden;
+}
+
+.task-table table{
+width:100%;
+border-collapse:collapse;
+}
+
+.task-table th{
+background:#f3f4f6;
+padding:14px;
+text-align:left;
+font-weight:600;
+}
+
+.task-table td{
+padding:14px;
+border-bottom:1px solid #eee;
+}
+
+.no-data{
+text-align:center;
+padding:30px;
+color:#888;
+}
+
+.task-status{
+padding:4px 10px;
+border-radius:6px;
+font-size:12px;
+font-weight:600;
+}
+
+.task-status.pending{
+background:#fff3cd;
+color:#856404;
+}
+
+.task-status.completed{
+background:#d4edda;
+color:#155724;
+}
+
+.task-status.inprogress{
+background:#cce5ff;
+color:#004085;
+}
+
+.task-page {
+  padding: 24px 28px;
+  background: #f6f8fc;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+.task-header {
+  margin-bottom: 20px;
+}
+
+.task-header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.task-header p {
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.task-table {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  overflow-x: auto;
+}
+
+.task-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.task-table th,
+.task-table td {
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 14px;
+}
+
+.task-table th {
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 600;
+}
+
+.task-table tr:hover {
+  background: #f9fbfd;
+}
+
+.no-data {
+  text-align: center;
+  padding: 24px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Status badges */
+.task-status {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.task-status.pending {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.task-status.in-progress {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.task-status.completed {
+  background: #ecfdf5;
+  color: #16a34a;
+}
+
+/* Dropdown */
+.task-action-dropdown {
+  padding: 8px 12px;
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  min-width: 140px;
+  transition: all 0.2s ease;
+}
+
+.task-action-dropdown:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.task-action-dropdown:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
