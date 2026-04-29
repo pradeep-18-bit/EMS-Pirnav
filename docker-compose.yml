@@ -10,15 +10,8 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       ASPNETCORE_URLS: http://+:8080
-      ConnectionStrings__DefaultConnection: ${DB_CONNECTION_STRING}
-      Jwt__Key: ${JWT_KEY}
-      Jwt__Issuer: ${JWT_ISSUER:-EMS}
-      Jwt__Audience: ${JWT_AUDIENCE:-EMSUsers}
-      EmailSettings__Host: ${EMAIL_HOST:-smtp.gmail.com}
-      EmailSettings__Port: ${EMAIL_PORT:-587}
-      EmailSettings__Username: ${EMAIL_USERNAME}
-      EmailSettings__Password: ${EMAIL_PASSWORD}
-      Frontend__LoginUrl: ${FRONTEND_LOGIN_URL:-http://localhost:5173/login}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "${BACKEND_PORT:-5007}:8080"
     volumes:
