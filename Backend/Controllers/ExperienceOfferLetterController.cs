@@ -1,6 +1,7 @@
 ﻿using EmployeeManagementSystem.Data;
 using EmployeeManagementSystem.DTOs;
 using EmployeeManagementSystem.Interfaces;
+using EmployeeManagementSystem.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,13 +14,13 @@ namespace EmployeeManagementSystem.Controllers
     [Route("api/[controller]")]
     public class ExperienceOfferLetterController : ControllerBase
     {
-        private readonly IOfferLetterService _experienceofferLetterService;
+        private readonly ExperienceOfferLetterService _experienceofferLetterService;
         private readonly AppDbContext _context;
 
         private const string AdminEmail = "admin@ems.com"; // change to your admin email
 
         public ExperienceOfferLetterController(
-            IOfferLetterService offerLetterService,
+            ExperienceOfferLetterService offerLetterService,
             AppDbContext context)
         {
             _experienceofferLetterService = offerLetterService;
@@ -67,7 +68,7 @@ namespace EmployeeManagementSystem.Controllers
                     x.Email,
                     x.Position,
                     x.Department,
-                    DownloadUrl = $"{Request.Scheme}://{Request.Host}/api/OfferLetter/download/{x.Id}"
+                    DownloadUrl = $"{Request.Scheme}://{Request.Host}/api/ExperienceOfferLetter/download/{x.Id}"
                 })
                 .ToListAsync();
 

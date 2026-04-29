@@ -22,12 +22,21 @@ WORKDIR /app
 ENV ASPNETCORE_URLS=http://+:8080 \
     DOTNET_RUNNING_IN_CONTAINER=true
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        fontconfig \
+        fonts-dejavu \
+        libreoffice-writer \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/publish ./
+COPY --from=build /src/Templates ./Templates
 
 RUN mkdir -p \
     /app/GeneratedLetters \
     /app/GeneratedPayslips \
     /app/wwwroot/GeneratedPayslips \
+    /app/wwwroot/uploads \
     /app/wwwroot/uploads/assets \
     && chown -R ${APP_UID}:${APP_UID} /app
 

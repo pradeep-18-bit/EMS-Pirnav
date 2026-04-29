@@ -229,8 +229,7 @@ export const API = {
 
   // ================= OFFER LETTER =================
   OFFER: {
-    // Kept Generate casing to match the current working backend route.
-    GENERATE: "/OfferLetter/Generate",
+    GENERATE: "/OfferLetter/generate",
     LIST: "/OfferLetter/all",
     DOWNLOAD: (id) => `/OfferLetter/download/${id}`,
   },
@@ -392,7 +391,7 @@ export const API_ENDPOINTS = {
     manualGenerate: API.PAYSLIP.MANUAL_GENERATE,
   },
   offerLetters: {
-    list: "/OfferLetter",
+    list: API.OFFER.LIST,
     all: API.OFFER.LIST,
     generate: API.OFFER.GENERATE,
     download: API.OFFER.DOWNLOAD,

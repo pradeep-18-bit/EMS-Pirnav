@@ -1,12 +1,11 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using EmployeeManagementSystem.Data;
+using EmployeeManagementSystem.Helpers;
 using EmployeeManagementSystem.Interfaces;
 using EmployeeManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 using System.Globalization;
-using System.Runtime.InteropServices;
 
 namespace EmployeeManagementSystem.Services
 {
@@ -232,10 +231,10 @@ namespace EmployeeManagementSystem.Services
             var fileNameOnly = Path.GetFileName(pdfPath);
             var relativePath = $"/GeneratedPayslips/{fileNameOnly}";
 
-            var request = _httpContextAccessor.HttpContext.Request;
-            var baseUrl = $"{request.Scheme}://{request.Host}";
+            var request = _httpContextAccessor.HttpContext?.Request;
+            var baseUrl = request == null ? string.Empty : $"{request.Scheme}://{request.Host}";
 
-            var remoteUrl = baseUrl + relativePath;
+            var remoteUrl = string.IsNullOrWhiteSpace(baseUrl) ? relativePath : baseUrl + relativePath;
 
             var payslip = new PaySlip
             {
@@ -247,7 +246,7 @@ namespace EmployeeManagementSystem.Services
                 NetSalary = netSalary,
                 TotalDeductions = totalDeductions,
                 OtherDeductions = OtherDeductions,
-                FilePath = remoteUrl,
+                FilePath = pdfPath,
                 Generated_On = DateTime.Now
             };
 
@@ -294,20 +293,7 @@ namespace EmployeeManagementSystem.Services
         //--------------------------------
         private void ConvertDocxToPdf(string docxPath, string pdfPath)
         {
-            var sofficePath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? @"C:\Program Files\LibreOffice\program\soffice.exe"
-                : "/usr/bin/soffice";
-            var process = new Process();
-
-            process.StartInfo.FileName = sofficePath;
-            process.StartInfo.Arguments =
-                $"--headless --convert-to pdf --outdir \"{Path.GetDirectoryName(pdfPath)}\" \"{docxPath}\"";
-
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.UseShellExecute = false;
-
-            process.Start();
-            process.WaitForExit();
+            LibreOfficeConverter.ConvertDocxToPdf(docxPath, pdfPath);
         }
 
         //--------------------------------

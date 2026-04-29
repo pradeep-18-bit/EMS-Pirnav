@@ -17,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 // ================= SERVICES =================
 
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<JwtHelper>();
@@ -48,22 +49,38 @@ builder.Services.AddScoped<ExperienceOfferLetterService>();
 builder.Services.AddScoped<ModuleSearchService>();
 
 // ================= CORS =================
+var configuredAllowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .GetChildren()
+    .Select(x => x.Value ?? string.Empty);
+
+var configuredAllowedOriginsValue = builder.Configuration["Cors:AllowedOrigins"] ?? string.Empty;
+
+var allowedOrigins = configuredAllowedOrigins
+    .Concat(configuredAllowedOriginsValue.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+    .Select(origin => origin.Trim().TrimEnd('/'))
+    .Where(origin => !string.IsNullOrWhiteSpace(origin))
+    .Distinct(StringComparer.OrdinalIgnoreCase)
+    .ToArray();
+
+var allowAnyOrigin = allowedOrigins.Length == 0
+    || allowedOrigins.Any(origin => origin == "*");
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy
-            .WithOrigins(
-                "http://localhost:5173",
-                "http://localhost:5174"
-            )
-            .WithHeaders(
-                "Content-Type",
-                "Authorization",
-                "ngrok-skip-browser-warning"
-            )
-            .AllowAnyMethod()
-            .AllowCredentials();
+        if (allowAnyOrigin)
+        {
+            policy.AllowAnyOrigin();
+        }
+        else
+        {
+            policy.WithOrigins(allowedOrigins);
+        }
+
+        policy.AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 

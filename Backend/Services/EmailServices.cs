@@ -19,7 +19,7 @@ namespace EmployeeManagementSystem.Services
             _port = int.TryParse(configuration["EmailSettings:Port"], out var port) ? port : 587;
             _fromEmail = configuration["EmailSettings:Username"] ?? "";
             _appPassword = configuration["EmailSettings:Password"] ?? "";
-            _loginUrl = configuration["Frontend:LoginUrl"] ?? "http://localhost:5173/login";
+            _loginUrl = configuration["Frontend:LoginUrl"] ?? "";
         }
 
         public void SendOtp(string toEmail, string otp)

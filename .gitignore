@@ -1,6 +1,8 @@
 .env
 .env.*
 !.env.example
+!Frontend/EMS/.env.development
+!Frontend/EMS/.env.production
 
 Frontend/EMS/node_modules/
 Frontend/EMS/dist/

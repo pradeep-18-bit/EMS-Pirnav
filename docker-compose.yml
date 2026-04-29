@@ -25,6 +25,7 @@ services:
       context: ./Frontend
       dockerfile: Dockerfile
       args:
+        # Browser code cannot resolve Docker DNS names; "/" lets Nginx proxy /api to backend:8080.
         VITE_API_ORIGIN: ${VITE_API_ORIGIN:-/}
     image: ems-pirnav-frontend:${IMAGE_TAG:-latest}
     restart: unless-stopped

@@ -58,11 +58,12 @@ namespace EmployeeManagementSystem.Controllers
         public async Task<IActionResult> Preview(int id)
         {
             var payslip = await _context.PaySlips.FindAsync(id);
+            var filePath = ResolvePayslipFilePath(payslip?.FilePath);
 
-            if (payslip == null || !System.IO.File.Exists(payslip.FilePath))
+            if (payslip == null || filePath == null)
                 return NotFound("File not found");
 
-            var fileBytes = System.IO.File.ReadAllBytes(payslip.FilePath);
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
 
             return File(fileBytes, "application/pdf"); // inline preview
         }
@@ -73,13 +74,14 @@ namespace EmployeeManagementSystem.Controllers
         public async Task<IActionResult> Download(int id)
         {
             var payslip = await _context.PaySlips.FindAsync(id);
+            var filePath = ResolvePayslipFilePath(payslip?.FilePath);
 
-            if (payslip == null || !System.IO.File.Exists(payslip.FilePath))
+            if (payslip == null || filePath == null)
                 return NotFound("File not found");
 
-            var fileBytes = System.IO.File.ReadAllBytes(payslip.FilePath);
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
 
-            return File(fileBytes, "application/pdf", Path.GetFileName(payslip.FilePath));
+            return File(fileBytes, "application/pdf", Path.GetFileName(filePath));
         }
         [HttpGet("my")]
         public async Task<IActionResult> GetMyPayslips()
@@ -118,6 +120,29 @@ namespace EmployeeManagementSystem.Controllers
             });
 
             return Ok(result);
+        }
+
+        private static string? ResolvePayslipFilePath(string? storedPath)
+        {
+            if (string.IsNullOrWhiteSpace(storedPath))
+                return null;
+
+            if (System.IO.File.Exists(storedPath))
+                return storedPath;
+
+            var currentDirectory = Directory.GetCurrentDirectory();
+            var relativePath = storedPath;
+
+            if (Uri.TryCreate(storedPath, UriKind.Absolute, out var uri))
+                relativePath = uri.AbsolutePath;
+
+            if (relativePath.StartsWith("/", StringComparison.Ordinal))
+                relativePath = relativePath.TrimStart('/');
+
+            relativePath = relativePath.Replace('/', Path.DirectorySeparatorChar);
+            var wwwrootPath = Path.Combine(currentDirectory, "wwwroot", relativePath);
+
+            return System.IO.File.Exists(wwwrootPath) ? wwwrootPath : null;
         }
     }
 }
