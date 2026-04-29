@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+
+Frontend/EMS/node_modules/
+Frontend/EMS/dist/
+
+Backend/bin/
+Backend/obj/
+Backend/.vs/
+Backend/GeneratedLetters/
+Backend/GeneratedPayslips/
+Backend/wwwroot/GeneratedPayslips/

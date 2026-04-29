@@ -103,7 +103,7 @@ namespace EmployeeManagementSystem.Services
             var templatePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "Templates",
-                "PayslipTemplate 1 (1).docx");
+                "PaySlipTemplate 1 (1).docx");
 
             var outputFolder = Path.Combine(
                 Directory.GetCurrentDirectory(),

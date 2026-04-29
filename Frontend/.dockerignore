@@ -1,0 +1,10 @@
+EMS/node_modules
+EMS/dist
+EMS/.env
+EMS/.env.*
+EMS/*.local
+EMS/dist.zip
+.git
+.gitignore
+Dockerfile
+.dockerignore

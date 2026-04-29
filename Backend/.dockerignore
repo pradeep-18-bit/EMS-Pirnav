@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+GeneratedLetters/
+GeneratedPayslips/
+wwwroot/GeneratedPayslips/
+*.user
+*.suo
+*.log
+.git
+.gitignore
+Dockerfile
+.dockerignore
+appsettings.Development.json
+appsettings.*.local.json

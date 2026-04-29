@@ -1,0 +1,47 @@
+services:
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    image: ems-pirnav-backend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: ${DB_CONNECTION_STRING}
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: ${JWT_ISSUER:-EMS}
+      Jwt__Audience: ${JWT_AUDIENCE:-EMSUsers}
+      EmailSettings__Host: ${EMAIL_HOST:-smtp.gmail.com}
+      EmailSettings__Port: ${EMAIL_PORT:-587}
+      EmailSettings__Username: ${EMAIL_USERNAME}
+      EmailSettings__Password: ${EMAIL_PASSWORD}
+      Frontend__LoginUrl: ${FRONTEND_LOGIN_URL:-http://localhost:5173/login}
+    ports:
+      - "${BACKEND_PORT:-5007}:8080"
+    volumes:
+      - backend_generated_letters:/app/GeneratedLetters
+      - backend_generated_payslips:/app/GeneratedPayslips
+      - backend_wwwroot_generated_payslips:/app/wwwroot/GeneratedPayslips
+      - backend_uploads:/app/wwwroot/uploads
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_ORIGIN: ${VITE_API_ORIGIN:-/}
+    image: ems-pirnav-frontend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-5173}:8080"
+
+volumes:
+  backend_generated_letters:
+  backend_generated_payslips:
+  backend_wwwroot_generated_payslips:
+  backend_uploads:
