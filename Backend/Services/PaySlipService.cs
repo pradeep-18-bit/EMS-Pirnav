@@ -16,19 +16,20 @@ namespace EmployeeManagementSystem.Services
         private readonly IAttendanceService _attendanceService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-
-        public PaySlipService(AppDbContext context, IAttendanceService attendanceService, IHttpContextAccessor httpContextAccessor)
+        public PaySlipService(AppDbContext context,
+                              IAttendanceService attendanceService,
+                              IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _attendanceService = attendanceService;
             _httpContextAccessor = httpContextAccessor;
         }
 
+        //--------------------------------
+        // GENERATE SINGLE PAYSLIP
+        //--------------------------------
         public async Task<string> GeneratePaySlip(string employeeId, int year, string month, decimal OtherDeductions)
         {
-            //--------------------------------
-            // FETCH EMPLOYEE (OPTIMIZED)
-            //--------------------------------
             var employee = await _context.Employees
                 .AsNoTracking()
                 .Include(e => e.BankDetails)
@@ -37,25 +38,25 @@ namespace EmployeeManagementSystem.Services
             if (employee == null)
                 throw new Exception("Employee not found");
 
-            //--------------------------------
-            // FETCH PERSONAL INFO (OPTIMIZED)
-            //--------------------------------
             var personalInfo = await _context.EmployeePersonalInfos
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Employee_Id == employeeId);
 
-
+            //--------------------------------
+            // MONTH
+            //--------------------------------
             if (!DateTime.TryParseExact(
-         month.Trim(),
-         "MMMM",
-         CultureInfo.InvariantCulture,
-         DateTimeStyles.None,
-         out DateTime parsedMonth))
+                month.Trim(),
+                "MMMM",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime parsedMonth))
             {
                 throw new Exception($"Invalid month format: {month}");
             }
 
-            int monthNumber = parsedMonth.Month; int yearValue = year;
+            int monthNumber = parsedMonth.Month;
+            int yearValue = year;
 
             //--------------------------------
             // ATTENDANCE
@@ -74,7 +75,7 @@ namespace EmployeeManagementSystem.Services
             decimal paidDays = presentDays + weekendDays;
 
             //--------------------------------
-            // SALARY CALCULATIONS (UNCHANGED)
+            // CALCULATIONS (UNCHANGED)
             //--------------------------------
             decimal annualCTC = employee.CTC;
             decimal monthlyCTC = annualCTC / 12;
@@ -87,7 +88,6 @@ namespace EmployeeManagementSystem.Services
             decimal medical = Math.Round(1250 * ratio);
 
             decimal pf = Math.Round(basic * 0.12m);
-
             decimal gross = (monthlyCTC * ratio) - pf;
 
             decimal specialAllowance =
@@ -104,49 +104,37 @@ namespace EmployeeManagementSystem.Services
             decimal netSalary =
                 totalEarnings - totalDeductions;
 
-            int workingDays = totalWorkingDays;
-
-            decimal perDaySalary = workingDays > 0
-                ? totalEarnings / workingDays
-                : 0;
-
-            decimal earnedSalary = perDaySalary * presentDays;
-
             if (netSalary < 0)
                 netSalary = 0;
 
             string netSalaryWords = NumberToWords((long)netSalary) + " Only";
 
             //--------------------------------
-            // MONTH
-            //--------------------------------
-            string monthYear = $"{month.ToUpper()} {year}";
-
-            //--------------------------------
-            // TEMPLATE PATH
+            // TEMPLATE
             //--------------------------------
             var templatePath = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "Templates",
                 "PayslipTemplate 1 (1).docx");
 
+            if (!File.Exists(templatePath))
+                throw new Exception($"Template not found: {templatePath}");
+
             var outputFolder = Path.Combine(
-     Directory.GetCurrentDirectory(),
-     "wwwroot",
-     "GeneratedPayslips");
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                "GeneratedPayslips");
 
             if (!Directory.Exists(outputFolder))
                 Directory.CreateDirectory(outputFolder);
 
-            var fileName =
-                $"Payslip_{employee.Employee_Id}_{employee.Name}_{DateTime.Now:yyyyMMddHHmmss}.docx";
-
+            var fileName = $"Payslip_{employee.Employee_Id}_{DateTime.Now:yyyyMMddHHmmss}.docx";
             var outputPath = Path.Combine(outputFolder, fileName);
 
             File.Copy(templatePath, outputPath, true);
 
             //--------------------------------
-            // WORD BOOKMARK REPLACEMENT
+            // REPLACE BOOKMARKS
             //--------------------------------
             using (WordprocessingDocument wordDoc =
                 WordprocessingDocument.Open(outputPath, true))
@@ -155,45 +143,16 @@ namespace EmployeeManagementSystem.Services
                 ReplaceBookmark(wordDoc, "EmployeeID", employee.Employee_Id);
                 ReplaceBookmark(wordDoc, "Position", employee.RoleName);
                 ReplaceBookmark(wordDoc, "Department", employee.Department);
-                ReplaceBookmark(wordDoc, "Month", monthYear);
+                ReplaceBookmark(wordDoc, "Month", $"{month.ToUpper()} {year}");
 
                 ReplaceBookmark(wordDoc, "JoiningDate",
                     employee.JoiningDate.ToString("dd/MM/yyyy"));
 
-                ReplaceBookmark(wordDoc, "BankAccountNumber",
-                    employee.BankDetails?.Account_Number ?? "");
-
-                ReplaceBookmark(wordDoc, "BankName",
-                    employee.BankDetails?.Bank_Name ?? "");
-
-                ReplaceBookmark(wordDoc, "UAN",
-                    employee.BankDetails?.UAN_Number ?? "");
-
-                ReplaceBookmark(wordDoc, "PF",
-                    employee.BankDetails?.PF_Account_Number ?? "");
-
-                ReplaceBookmark(wordDoc, "PAN",
-                    personalInfo?.PanNumber ?? "");
-
-                ReplaceBookmark(wordDoc, "Location",
-     string.IsNullOrEmpty(personalInfo?.Location)
-         ? "Hyderabad"
-         : personalInfo.Location);
-
                 ReplaceBookmark(wordDoc, "Basic", basic.ToString("N0"));
                 ReplaceBookmark(wordDoc, "HRA", hra.ToString("N0"));
-                ReplaceBookmark(wordDoc, "ConveyanceAllowance", conveyance.ToString("N0"));
-                ReplaceBookmark(wordDoc, "Medical", medical.ToString("N0"));
-                ReplaceBookmark(wordDoc, "Special", specialAllowance.ToString("N0"));
-
                 ReplaceBookmark(wordDoc, "TotalEarnings", totalEarnings.ToString("N0"));
-                ReplaceBookmark(wordDoc, "OtherDeduction", OtherDeductions.ToString("N0"));
                 ReplaceBookmark(wordDoc, "TotalDeduction", totalDeductions.ToString("N0"));
                 ReplaceBookmark(wordDoc, "NetSalary", netSalary.ToString("N0"));
-
-                ReplaceBookmark(wordDoc, "ProfessionalTax", professionalTax.ToString("N0"));
-                ReplaceBookmark(wordDoc, "PFAmount", pf.ToString("N0"));
-
                 ReplaceBookmark(wordDoc, "InWords", netSalaryWords);
 
                 ReplaceBookmark(wordDoc, "TotalWorkingDays", totalWorkingDays.ToString());
@@ -206,64 +165,62 @@ namespace EmployeeManagementSystem.Services
             //--------------------------------
             var pdfPath = outputPath.Replace(".docx", ".pdf");
 
-            ConvertDocxToPdf(outputPath, pdfPath);
+            var process = new Process();
+            var sofficePath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? @"C:\Program Files\LibreOffice\program\soffice.exe"
+                : "/usr/bin/soffice";
+
+            process.StartInfo.FileName = sofficePath;
+            process.StartInfo.Arguments =
+                $"--headless --convert-to pdf \"{outputPath}\" --outdir \"{outputFolder}\"";
+
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.UseShellExecute = false;
+
+            process.Start();
+            process.WaitForExit();
+
+            if (!File.Exists(pdfPath))
+                throw new Exception("PDF generation failed.");
 
             if (File.Exists(outputPath))
-            {
                 File.Delete(outputPath);
-            }
 
             //--------------------------------
-            // SAVE TO DATABASE
+            // SAVE
             //--------------------------------
-            //--------------------------------
-            // SAVE TO DATABASE (WITH DUPLICATE CHECK)
-            //--------------------------------
-            var exists = await _context.PaySlips
-                .AnyAsync(p => p.EmployeeId == employee.Employee_Id
-                            && p.Month == month
-                            && p.Year == year);
-
-            if (exists)
-            {
-                Console.WriteLine($"Already exists: {employee.Employee_Id} - {month} {year}");
-                return "Skipped";
-            }
-            var fileNameOnly = Path.GetFileName(pdfPath);
-            var relativePath = $"/GeneratedPayslips/{fileNameOnly}";
-
-            var request = _httpContextAccessor.HttpContext.Request;
-            var baseUrl = $"{request.Scheme}://{request.Host}";
-
-            var remoteUrl = baseUrl + relativePath;
-
             var payslip = new PaySlip
             {
                 EmployeeId = employee.Employee_Id,
-                CTC = employee.CTC,
                 Month = month,
                 Year = year,
                 GrossSalary = gross,
                 NetSalary = netSalary,
                 TotalDeductions = totalDeductions,
                 OtherDeductions = OtherDeductions,
-                FilePath = remoteUrl,
+                FilePath = pdfPath,
                 Generated_On = DateTime.Now
             };
 
             _context.PaySlips.Add(payslip);
             await _context.SaveChangesAsync();
 
-            return remoteUrl;
+            //--------------------------------
+            // RETURN URL
+            //--------------------------------
+            var request = _httpContextAccessor.HttpContext?.Request;
+            var baseUrl = request != null ? $"{request.Scheme}://{request.Host}" : "";
+
+            var fileNameOnly = Path.GetFileName(pdfPath);
+            return baseUrl + $"/GeneratedPayslips/{fileNameOnly}";
         }
 
         //--------------------------------
-        // BULK PAYSLIP GENERATION (OPTIMIZED)
+        // BULK GENERATION (FIXED ERROR)
         //--------------------------------
         public async Task<List<string>> GenerateAllPaySlips(int year, string month)
         {
             var employeeIds = await _context.Employees
-                .AsNoTracking()
                 .Select(e => e.Employee_Id)
                 .ToListAsync();
 
@@ -279,44 +236,41 @@ namespace EmployeeManagementSystem.Services
         }
 
         //--------------------------------
-        // GET ALL PAYSLIPS (OPTIMIZED)
+        // GET RECENT (FIXED ERROR)
         //--------------------------------
         public async Task<List<PaySlip>> GetRecentPayslips()
         {
             return await _context.PaySlips
-                .AsNoTracking()
                 .OrderByDescending(x => x.Id)
                 .ToListAsync();
         }
 
         //--------------------------------
-        // DOCX → PDF
+        // BOOKMARK
         //--------------------------------
-        private void ConvertDocxToPdf(string docxPath, string pdfPath)
+        private void ReplaceBookmark(WordprocessingDocument doc, string name, string text)
         {
-            var sofficePath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? @"C:\Program Files\LibreOffice\program\soffice.exe"
-                : "/usr/bin/soffice";
-            var process = new Process();
+            var bookmark = doc.MainDocumentPart.RootElement
+                .Descendants<BookmarkStart>()
+                .FirstOrDefault(b => b.Name == name);
 
-            process.StartInfo.FileName = sofficePath;
-            process.StartInfo.Arguments =
-                $"--headless --convert-to pdf --outdir \"{Path.GetDirectoryName(pdfPath)}\" \"{docxPath}\"";
-
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.UseShellExecute = false;
-
-            process.Start();
-            process.WaitForExit();
+            if (bookmark != null)
+            {
+                var run = bookmark.NextSibling<Run>();
+                if (run != null)
+                {
+                    run.RemoveAllChildren<Text>();
+                    run.Append(new Text(text));
+                }
+            }
         }
 
         //--------------------------------
-        // NUMBER TO WORDS
+        // NUMBER TO WORDS (UNCHANGED)
         //--------------------------------
         public static string NumberToWords(long number)
         {
-            if (number == 0)
-                return "Zero";
+            if (number == 0) return "Zero";
 
             string words = "";
 
@@ -340,54 +294,30 @@ namespace EmployeeManagementSystem.Services
 
             if (number > 0)
             {
-                var unitsMap = new[]
+                var units = new[]
                 {
                     "Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine",
                     "Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen",
                     "Sixteen","Seventeen","Eighteen","Nineteen"
                 };
 
-                var tensMap = new[]
+                var tens = new[]
                 {
                     "Zero","Ten","Twenty","Thirty","Forty","Fifty",
                     "Sixty","Seventy","Eighty","Ninety"
                 };
 
                 if (number < 20)
-                    words += unitsMap[number];
+                    words += units[number];
                 else
                 {
-                    words += tensMap[number / 10];
+                    words += tens[number / 10];
                     if ((number % 10) > 0)
-                        words += " " + unitsMap[number % 10];
+                        words += " " + units[number % 10];
                 }
             }
 
             return words;
-        }
-
-        //--------------------------------
-        // BOOKMARK METHOD (UNCHANGED)
-        //--------------------------------
-        private void ReplaceBookmark(
-            WordprocessingDocument doc,
-            string bookmarkName,
-            string text)
-        {
-            var bookmark = doc.MainDocumentPart.RootElement
-                .Descendants<BookmarkStart>()
-                .FirstOrDefault(b => b.Name == bookmarkName);
-
-            if (bookmark != null)
-            {
-                var run = bookmark.NextSibling<Run>();
-
-                if (run != null)
-                {
-                    run.RemoveAllChildren<Text>();
-                    run.Append(new Text(text));
-                }
-            }
         }
     }
 }

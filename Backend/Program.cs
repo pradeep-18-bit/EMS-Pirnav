@@ -17,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 // ================= SERVICES =================
 
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<JwtHelper>();
@@ -53,17 +54,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", policy =>
     {
         policy
-            .WithOrigins(
-                "http://localhost:5173",
-                "http://localhost:5174"
-            )
-            .WithHeaders(
-                "Content-Type",
-                "Authorization",
-                "ngrok-skip-browser-warning"
-            )
-            .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyOrigin()   // ✅ allow ALL domains
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 

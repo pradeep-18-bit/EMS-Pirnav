@@ -4,7 +4,6 @@ import api from "../api/axiosInstance";
 import { API_ENDPOINTS, buildApiUrl } from "../api/endpoints";
 import {
   FaDownload,
-  FaEye,
   FaAngleLeft,
   FaAngleRight,
   FaAnglesLeft,
@@ -41,8 +40,8 @@ function Payroll() {
   // =========================
   // DEFAULT FILTER = CURRENT MONTH + CURRENT YEAR
   // =========================
-  const [recentFilterMonth, setRecentFilterMonth] = useState("All");
-  const [recentFilterYear, setRecentFilterYear] = useState("All");
+  const [recentFilterMonth, setRecentFilterMonth] = useState(currentMonthName);
+  const [recentFilterYear, setRecentFilterYear] = useState(String(currentYearValue));
 
   // =========================
   // FRONTEND PAGINATION STATES
@@ -400,10 +399,7 @@ function Payroll() {
       setErrorMsg("");
 
       if (generationMode === "auto") {
-        const periods =
-          selectedPeriod === 1
-            ? [{ month, year }]
-            : getMonthYearList(selectedPeriod, month, year);
+        const periods = getMonthYearList(selectedPeriod, month, year);
         const deductionValue = Number(deduction) || 0;
 
         for (const employeeId of employeeIds) {
@@ -412,7 +408,7 @@ function Payroll() {
               params: {
                 employeeId,
                 year: period.year,
-                month: period.month,
+                month: months.indexOf(period.month) + 1,
                 OtherDeductions: deductionValue
               },
               headers: {
@@ -429,7 +425,7 @@ function Payroll() {
         for (const employeeId of employeeIds) {
           const payload = {
             employeeId,
-            month,
+            month: months.indexOf(month) + 1, // ✅ FIXED
             year: Number(year),
             totalWorkingDays: Number(manualForm.totalWorkingDays) || 0,
             lopDays: Number(manualForm.lopDays) || 0,
@@ -473,13 +469,34 @@ function Payroll() {
     }));
   };
 
-  const handleViewPayslip = (id) => {
-    window.open(buildApiUrl(API_ENDPOINTS.payroll.preview(id)), "_blank");
+  const handleDownloadPayslip = async (id) => {
+    try {
+      const response = await api.get(
+        buildApiUrl(API_ENDPOINTS.payroll.download(id)),
+        {
+          responseType: "blob",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Payslip_${id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
   };
 
-  const handleDownloadPayslip = (id) => {
-    window.open(buildApiUrl(API_ENDPOINTS.payroll.download(id)), "_blank");
-  };
 
   const isBulkMode = selectedEmployees.length > 1;
 
@@ -707,7 +724,6 @@ function Payroll() {
                         onChange={(e) => setMonth(e.target.value)}
                         disabled={generating}
                       >
-
                         {months.map((m) => (
                           <option key={m} value={m}>
                             {m}
@@ -727,9 +743,7 @@ function Payroll() {
                     ? "Generating..."
                     : selectedEmployees.length > 0
                       ? `Generate for ${selectedEmployees.length} Employee(s) - ${selectedPeriod} Month(s)`
-                      : `Generate ${selectedPeriod > 1
-                        ? `${selectedPeriod} Months from ${month} ${year}`
-                        : `${month} ${year} Payslip`}}`}
+                      : `Generate ${selectedPeriod > 1 ? `${selectedPeriod} Months` : `${month}`} Payslip`}
                 </button>
               </div>
             </>
@@ -865,16 +879,26 @@ function Payroll() {
 
             <div className="table-scroll">
               <table>
+                <colgroup>
+                  <col className="employee-col" />
+                  <col className="department-col" />
+                  <col className="period-col" />
+                  <col className="numeric-col" />
+                  <col className="numeric-col" />
+                  <col className="numeric-col" />
+                  <col className="generated-col" />
+                  <col className="action-col" />
+                </colgroup>
                 <thead>
                   <tr>
                     <th>Employee</th>
                     <th>Department</th>
                     <th>Period</th>
-                    <th>Net Pay</th>
-                    <th>Deduction</th>
-                    <th>CTC</th>
-                    <th>Generated</th>
-                    <th>Actions</th>
+                    <th className="numeric align-right">Net Pay</th>
+                    <th className="numeric align-right">Deduction</th>
+                    <th className="numeric align-right">CTC</th>
+                    <th className="generated-col">Generated</th>
+                    <th className="action-col center align-center">Actions</th>
                   </tr>
                 </thead>
 
@@ -910,31 +934,30 @@ function Payroll() {
                             {p.month || "-"} {p.year || ""}
                           </td>
 
-                          <td>
-                            ₹
-                            {p.netPay
-                              ? Number(p.netPay).toLocaleString("en-IN")
-                              : "-"}
+                          <td className="numeric align-right">
+                            <span className="currency">
+                              ₹{p.netPay ? Number(p.netPay).toLocaleString("en-IN") : "-"}
+                            </span>
                           </td>
 
-                          <td>
-                            ₹
-                            {Number(
-                              p.OtherDeductions ??
-                              p.otherDeductions ??
-                              p.deduction ??
-                              0
-                            ).toLocaleString("en-IN")}
+                          <td className="numeric align-right">
+                            <span className="currency">
+                              ₹{Number(
+                                p.OtherDeductions ??
+                                p.otherDeductions ??
+                                p.deduction ??
+                                0
+                              ).toLocaleString("en-IN")}
+                            </span>
                           </td>
 
-                          <td>
-                            ₹
-                            {p.ctc
-                              ? Number(p.ctc).toLocaleString("en-IN")
-                              : "-"}
+                          <td className="numeric align-right">
+                            <span className="currency">
+                              ₹{p.ctc ? Number(p.ctc).toLocaleString("en-IN") : "-"}
+                            </span>
                           </td>
 
-                          <td>
+                          <td className="generated-col">
                             {p.parsedGeneratedDate
                               ? p.parsedGeneratedDate.toLocaleString("en-IN", {
                                 year: "numeric",
@@ -948,13 +971,8 @@ function Payroll() {
                               : "-"}
                           </td>
 
-                          <td>
+                          <td className="center align-center action-cell">
                             <div className="action-icons">
-                              <FaEye
-                                className="view-icon"
-                                onClick={() => handleViewPayslip(p.id)}
-                              />
-
                               <FaDownload
                                 className="download-icon"
                                 onClick={() => handleDownloadPayslip(p.id)}

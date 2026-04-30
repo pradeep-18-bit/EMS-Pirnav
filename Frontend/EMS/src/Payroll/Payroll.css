@@ -8,7 +8,7 @@
   overflow: hidden;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
- 
+
 /* =========================
    LEFT PANEL
 ========================= */
@@ -20,7 +20,7 @@
   overflow-y: auto;
   height: 100%;
 }
- 
+
 /* =========================
    HEADER
 ========================= */
@@ -30,13 +30,13 @@
   align-items: center;
   margin-bottom: 15px;
 }
- 
+
 .employee-panel h2 {
   font-size: 22px;
   font-weight: 600;
   margin: 0;
 }
- 
+
 /* =========================
    SEARCH BOX
 ========================= */
@@ -51,18 +51,18 @@
   transition: 0.2s;
   box-sizing: border-box;
 }
- 
+
 .search-box:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
- 
+
 .search-box:disabled {
   background: #f3f4f6;
   cursor: not-allowed;
   opacity: 0.8;
 }
- 
+
 /* =========================
    EMPLOYEE LIST
 ========================= */
@@ -71,7 +71,7 @@
   flex-direction: column;
   gap: 10px;
 }
- 
+
 .employee-card {
   display: flex;
   justify-content: space-between;
@@ -83,31 +83,31 @@
   border: 1px solid transparent;
   gap: 12px;
 }
- 
+
 .employee-card:hover {
   background: #f3f4f6;
 }
- 
+
 .employee-card.disabled-card {
   opacity: 0.65;
   cursor: not-allowed;
 }
- 
+
 /* ACTIVE EMPLOYEE */
 .employee-card.active {
   border: 2px solid #2563eb;
   background: #eef4ff;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
 }
- 
+
 .employee-card.active:hover {
   background: #e8f0ff;
 }
- 
+
 .employee-card strong {
   font-size: 14px;
 }
- 
+
 .employee-card p {
   font-size: 12px;
   color: #6b7280;
@@ -117,21 +117,25 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
- 
+
 .employee-card strong {
   font-size: 14px;
   font-weight: 600;
- 
-  white-space: normal;      /* allow wrap */
-  word-break: break-word;   /* break long names */
+
+  white-space: normal;
+  /* allow wrap */
+  word-break: break-word;
+  /* break long names */
   overflow: hidden;
 }
- 
+
 .emp-name {
-  white-space: normal;      /* allow wrapping */
+  white-space: normal;
+  /* allow wrapping */
   word-break: break-word;
   line-height: 1.3;
-  max-width: 220px;         /* controls where it breaks */
+  max-width: 220px;
+  /* controls where it breaks */
 }
 
 .recent-table td:first-child {
@@ -145,7 +149,7 @@
   margin-left: 10px;
   flex-shrink: 0;
 }
- 
+
 /* =========================
    RIGHT PANEL
 ========================= */
@@ -156,7 +160,7 @@
   height: 100%;
   position: relative;
 }
- 
+
 /* =========================
    EMPLOYEE HEADER
 ========================= */
@@ -172,25 +176,25 @@
   justify-content: space-between;
   flex-wrap: wrap;
 }
- 
+
 .employee-header h3 {
   margin: 0;
   font-size: 22px;
   font-weight: 700;
   color: #111827;
 }
- 
+
 .employee-header p {
   margin: 6px 0 0;
   color: #6b7280;
   font-size: 14px;
 }
- 
+
 .employee-header-info {
   flex: 1;
   min-width: 220px;
 }
- 
+
 .avatar {
   width: 54px;
   height: 54px;
@@ -204,11 +208,11 @@
   font-size: 18px;
   flex-shrink: 0;
 }
- 
+
 .bulk-avatar {
   background: #2563eb !important;
 }
- 
+
 /* =========================
    COMMON CARD STYLE
 ========================= */
@@ -222,7 +226,7 @@
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
 }
- 
+
 .generate-card h4,
 .recent-table h4,
 .selected-summary-card h4 {
@@ -232,7 +236,7 @@
   margin-top: 0;
   color: #111827;
 }
- 
+
 /* =========================
    INPUT / LABEL COMMON
 ========================= */
@@ -248,7 +252,7 @@
   display: block;
   margin-bottom: 6px;
 }
- 
+
 .ctc-card input,
 .manual-field input,
 .period-buttons select,
@@ -263,7 +267,7 @@
   box-sizing: border-box;
   background: #fff;
 }
- 
+
 .ctc-card input:focus,
 .manual-field input:focus,
 .period-buttons select:focus,
@@ -271,7 +275,7 @@
   border-color: #10b981;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
 }
- 
+
 .ctc-card input:disabled,
 .manual-field input:disabled,
 .period-buttons select:disabled,
@@ -280,13 +284,13 @@
   cursor: not-allowed;
   opacity: 0.8;
 }
- 
+
 .helper-text {
   color: #666;
   margin-top: 8px;
   display: block;
 }
- 
+
 /* =========================
    PERIOD SECTION
 ========================= */
@@ -297,32 +301,32 @@
   margin-bottom: 15px;
   flex-wrap: wrap;
 }
- 
+
 .standard-periods,
 .specific-period {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
- 
+
 .specific-period .period-buttons {
   display: flex;
   flex-direction: row;
   gap: 10px;
   flex-wrap: nowrap;
 }
- 
+
 .specific-period .period-buttons select {
   width: 150px;
 }
- 
+
 .period-buttons {
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
   flex-wrap: wrap;
 }
- 
+
 .period-buttons button {
   padding: 8px 16px;
   border-radius: 10px;
@@ -333,29 +337,29 @@
   font-weight: 500;
   transition: all 0.2s ease;
 }
- 
+
 .period-buttons button:hover {
   background: #e5e7eb;
 }
- 
+
 .period-buttons button:disabled {
   background: #f3f4f6;
   color: #9ca3af;
   cursor: not-allowed;
 }
- 
+
 .period-buttons button.active-period-btn {
   background: #10b981;
   color: #ffffff;
   border: 1px solid #10b981;
   box-shadow: 0 3px 8px rgba(16, 185, 129, 0.22);
 }
- 
+
 .period-buttons button.active-period-btn:hover {
   background: #059669;
   border-color: #059669;
 }
- 
+
 /* =========================
    GENERATE BUTTON
 ========================= */
@@ -371,16 +375,16 @@
   cursor: pointer;
   transition: 0.2s;
 }
- 
+
 .generate-btn:hover {
   background: #059669;
 }
- 
+
 .generate-btn:disabled {
   background: #cbd5e1;
   cursor: not-allowed;
 }
- 
+
 /* =========================
    MANUAL PAYSLIP GRID
 ========================= */
@@ -390,16 +394,16 @@
   gap: 16px;
   margin-top: 15px;
 }
- 
+
 .manual-field {
   display: flex;
   flex-direction: column;
 }
- 
+
 .manual-top-controls {
   margin-bottom: 20px;
 }
- 
+
 /* =========================
    ALERT / MESSAGE
 ========================= */
@@ -412,121 +416,184 @@
   font-size: 14px;
   border: 1px solid transparent;
 }
- 
+
 .success-message {
   background: #d1fae5;
   color: #065f46;
   border-color: #10b981;
 }
- 
+
 .error-message {
   background: #fee2e2;
   color: #991b1b;
   border-color: #ef4444;
 }
- 
+
 /* =========================
    RECENT TABLE
 ========================= */
 .table-scroll {
   overflow-x: auto;
   width: 100%;
-  padding: 5px;   /* add space inside */
+  padding: 5px;
+  /* add space inside */
   box-sizing: border-box;
 }
- 
+
 .table-scroll::-webkit-scrollbar {
   height: 6px;
 }
- 
+
 .table-scroll::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 10px;
 }
- 
+
 .recent-table table {
   width: 100%;
-  min-width: 950px;
+  min-width: 1000px;
   border-collapse: collapse;
+  table-layout: fixed;
 }
- 
-thead th {
-  text-align: left;
-  font-size: 13px;
-  color: #6b7280;
-  font-weight: 600;
-  padding: 0 0 12px;
-  border-bottom: 1px solid #e5e7eb;
-  white-space: nowrap;
+
+.recent-table col.employee-col {
+  width: 240px;
 }
- 
-tbody td {
-  padding: 14px 0;
+
+.recent-table col.department-col {
+  width: 160px;
+}
+
+.recent-table col.period-col {
+  width: 140px;
+}
+
+.recent-table col.numeric-col {
+  width: 140px;
+}
+
+.recent-table col.generated-col {
+  width: 220px;
+}
+
+.recent-table col.action-col {
+  width: 120px;
+}
+
+.recent-table th,
+.recent-table td {
+  padding: 14px 12px;
   font-size: 14px;
   border-bottom: 1px solid #f1f5f9;
   vertical-align: middle;
   color: #111827;
+  box-sizing: border-box;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
- 
-tbody tr:hover {
+
+.recent-table thead th {
+  text-align: left;
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 600;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.recent-table td:not(.numeric):not(.center) {
+  text-align: left;
+}
+
+.recent-table td.numeric,
+.recent-table th.numeric,
+.recent-table .align-right {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.recent-table td.center,
+.recent-table th.center,
+.recent-table .align-center {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.recent-table td.action-cell,
+.recent-table th.action-col {
+  width: 120px;
+  text-align: center;
+}
+
+.recent-table .currency {
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.recent-table td.numeric,
+.recent-table th.numeric {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.recent-table th.generated-col,
+.recent-table td.generated-col {
+  white-space: nowrap;
+}
+
+.recent-table td:first-child {
+  white-space: normal !important;
+  width: 240px;
+}
+
+.recent-table tbody tr:hover {
   background: #fafafa;
 }
- 
+
 .empid {
   font-size: 11px;
   color: #6b7280;
   margin-top: 3px;
 }
- 
-/* =========================
-   ACTION ICONS
-========================= */
+
 .action-icons {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 14px;
-  /* ❌ REMOVE height */
-}
-.recent-table td:last-child {
-  align-items: center;        /* vertical center */
-  justify-content: center;    /* horizontal center */
-  width: 120px;
 }
 
-.recent-table tbody tr {
-  height: auto;
-}
-
-tbody td {
-  vertical-align: middle;   /* ✅ keeps all columns aligned */
-}
- 
 .view-icon,
 .download-icon {
   cursor: pointer;
   font-size: 15px;
   transition: 0.2s;
 }
- 
+
 .view-icon {
   color: #6b7280;
 }
- 
+
 .view-icon:hover {
   color: #111827;
   transform: scale(1.15);
 }
- 
+
 .download-icon {
   color: #2563eb;
 }
- 
+
 .download-icon:hover {
   color: #1e40af;
   transform: scale(1.15);
 }
- 
+
 /* =========================
    SELECT ALL + CHECKBOX EMPLOYEE
 ========================= */
@@ -537,7 +604,7 @@ tbody td {
   border-radius: 10px;
   margin-bottom: 12px;
 }
- 
+
 .select-all-label {
   display: flex;
   align-items: center;
@@ -548,7 +615,7 @@ tbody td {
   cursor: pointer;
   user-select: none;
 }
- 
+
 .employee-left {
   display: flex;
   align-items: center;
@@ -556,7 +623,7 @@ tbody td {
   min-width: 0;
   flex: 1;
 }
- 
+
 .employee-left input[type="checkbox"],
 .select-all-label input[type="checkbox"] {
   width: 16px;
@@ -565,12 +632,12 @@ tbody td {
   accent-color: #2563eb;
   flex-shrink: 0;
 }
- 
+
 .employee-left input[type="checkbox"]:disabled,
 .select-all-label input[type="checkbox"]:disabled {
   cursor: not-allowed;
 }
- 
+
 /* =========================
    GENERATE CARD TITLE STATUS
 ========================= */
@@ -581,7 +648,7 @@ tbody td {
   flex-wrap: wrap;
   gap: 8px;
 }
- 
+
 .selected-badge {
   background: #eef4ff;
   color: #2563eb;
@@ -591,7 +658,7 @@ tbody td {
   font-size: 12px;
   font-weight: 600;
 }
- 
+
 /* =========================
    BULK SELECTION SUMMARY
 ========================= */
@@ -600,7 +667,7 @@ tbody td {
   flex-wrap: wrap;
   gap: 10px;
 }
- 
+
 .selected-summary-chip {
   background: #eef4ff;
   border: 1px solid #bfdbfe;
@@ -609,20 +676,20 @@ tbody td {
   border-radius: 12px;
   min-width: 180px;
 }
- 
+
 .selected-summary-chip span {
   display: block;
   font-weight: 600;
   font-size: 14px;
 }
- 
+
 .selected-summary-chip small {
   display: block;
   margin-top: 4px;
   font-size: 12px;
   color: #64748b;
 }
- 
+
 /* =========================
    DISABLED PANEL
 ========================= */
@@ -630,7 +697,7 @@ tbody td {
   pointer-events: none;
   opacity: 0.9;
 }
- 
+
 /* =========================
    GENERATING OVERLAY
 ========================= */
@@ -650,14 +717,14 @@ tbody td {
   gap: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
- 
+
 .generation-overlay p {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
   color: #111827;
 }
- 
+
 .generation-loader {
   width: 20px;
   height: 20px;
@@ -667,13 +734,13 @@ tbody td {
   animation: spin 0.7s linear infinite;
   flex-shrink: 0;
 }
- 
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
- 
+
 /* =========================
    REMOVE NUMBER INPUT ARROWS
 ========================= */
@@ -682,12 +749,12 @@ input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
- 
+
 input[type="number"] {
   appearance: textfield;
   -moz-appearance: textfield;
 }
- 
+
 /* =========================
    SCROLLBAR
 ========================= */
@@ -695,13 +762,13 @@ input[type="number"] {
 .payroll-content::-webkit-scrollbar {
   width: 6px;
 }
- 
+
 .employee-panel::-webkit-scrollbar-thumb,
 .payroll-content::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 10px;
 }
- 
+
 /* =========================
    RESPONSIVE - TABLET
 ========================= */
@@ -711,30 +778,30 @@ input[type="number"] {
     height: auto;
     overflow: auto;
   }
- 
+
   .employee-panel {
     width: 100%;
     height: auto;
     border-right: none;
     border-bottom: 1px solid #e5e7eb;
   }
- 
+
   .payroll-content {
     padding: 20px;
     height: auto;
   }
- 
+
   .period-section {
     flex-direction: column;
     gap: 20px;
   }
- 
+
   .employee-header {
     flex-direction: row;
     align-items: center;
   }
 }
- 
+
 /* =========================
    RESPONSIVE - MOBILE
 ========================= */
@@ -744,26 +811,26 @@ input[type="number"] {
     align-items: flex-start;
     gap: 10px;
   }
- 
+
   .employee-header {
     flex-direction: column;
     align-items: flex-start;
   }
- 
+
   .period-buttons {
     gap: 8px;
   }
- 
+
   .period-buttons button,
   .period-buttons select,
   .generate-btn {
     width: 100%;
   }
- 
+
   .manual-fields-grid {
     grid-template-columns: 1fr;
   }
- 
+
   .ctc-card,
   .generate-card,
   .recent-table,
@@ -771,37 +838,37 @@ input[type="number"] {
   .selected-summary-card {
     padding: 16px;
   }
- 
+
   .payroll-content {
     padding: 14px;
   }
- 
+
   .employee-panel {
     padding: 14px;
   }
- 
+
   .employee-card {
     align-items: flex-start;
   }
- 
+
   .employee-left {
     align-items: flex-start;
   }
- 
-  .employee-card > .dept {
+
+  .employee-card>.dept {
     margin-left: 0;
     margin-top: 6px;
   }
- 
+
   .select-all-row {
     padding: 10px;
   }
- 
+
   .selected-summary-chip {
     min-width: 100%;
   }
 }
- 
+
 .recent-table-header {
   display: flex;
   justify-content: space-between;
@@ -810,13 +877,13 @@ input[type="number"] {
   gap: 12px;
   flex-wrap: wrap;
 }
- 
+
 .recent-filters {
   display: flex;
   gap: 10px;
   align-items: center;
 }
- 
+
 .recent-filters select {
   min-width: 140px;
   padding: 10px 12px;
@@ -828,12 +895,12 @@ input[type="number"] {
   cursor: pointer;
   transition: 0.2s ease;
 }
- 
+
 .recent-filters select:focus {
   border-color: #4f46e5;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
- 
+
 /* =========================
    RECENT TABLE PAGINATION
 ========================= */
@@ -845,18 +912,18 @@ input[type="number"] {
   flex-wrap: wrap;
   gap: 12px;
 }
- 
+
 .pagination-info {
   font-size: 14px;
   color: #555;
 }
- 
+
 .pagination-controls {
   display: flex;
   align-items: center;
   gap: 12px;
 }
- 
+
 .pagination-controls button {
   padding: 8px 14px;
   border: none;
@@ -867,20 +934,20 @@ input[type="number"] {
   font-weight: 500;
   transition: 0.2s ease;
 }
- 
+
 .pagination-controls button:hover:not(:disabled) {
   opacity: 0.9;
   transform: translateY(-1px);
 }
- 
+
 .pagination-controls button:disabled {
   background: #c9d3df;
   cursor: not-allowed;
 }
- 
+
 .pagination-controls span {
   font-size: 14px;
   font-weight: 500;
   color: #333;
 }
- 
+

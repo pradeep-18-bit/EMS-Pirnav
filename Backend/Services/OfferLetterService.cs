@@ -6,6 +6,7 @@ using EmployeeManagementSystem.Interfaces;
 using EmployeeManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace EmployeeManagementSystem.Services
 {
@@ -212,8 +213,11 @@ namespace EmployeeManagementSystem.Services
             var pdfPath = outputPath.Replace(".docx", ".pdf");
 
             var process = new System.Diagnostics.Process();
-            process.StartInfo.FileName =
-                @"C:\Program Files\LibreOffice\program\soffice.exe";
+            var sofficePath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+    ? @"C:\Program Files\LibreOffice\program\soffice.exe"
+    : "/usr/bin/soffice";
+
+process.StartInfo.FileName = sofficePath;
 
             process.StartInfo.Arguments =
                 $"--headless --convert-to pdf \"{outputPath}\" --outdir \"{outputFolder}\"";
@@ -225,7 +229,10 @@ namespace EmployeeManagementSystem.Services
 
             process.Start();
             process.WaitForExit();
-
+if (!File.Exists(pdfPath))
+{
+    throw new Exception("PDF generation failed. LibreOffice not installed or wrong path.");
+}
             if (File.Exists(outputPath))
                 File.Delete(outputPath);
 
