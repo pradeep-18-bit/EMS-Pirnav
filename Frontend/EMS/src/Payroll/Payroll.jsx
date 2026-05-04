@@ -9,99 +9,81 @@ import {
   FaAnglesLeft,
   FaAnglesRight
 } from "react-icons/fa6";
-
+ 
 function Payroll() {
   const currentDate = new Date();
   const currentMonthName = currentDate.toLocaleString("en-US", { month: "long" });
   const currentYearValue = currentDate.getFullYear();
-
+ 
   const [employees, setEmployees] = useState([]);
   const [selectedEmp, setSelectedEmp] = useState(null);
-
-  // =========================
-  // ALL PAYSLIPS (FETCH ONCE)
-  // =========================
+ 
   const [allPayslips, setAllPayslips] = useState([]);
-
+ 
   const [search, setSearch] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-
+ 
   const [year, setYear] = useState(currentYearValue);
   const [month, setMonth] = useState(currentMonthName);
   const [selectedPeriod, setSelectedPeriod] = useState(1);
   const [generating, setGenerating] = useState(false);
-
+ 
   const [generationMode, setGenerationMode] = useState("auto");
   const [deduction, setDeduction] = useState("");
-
+ 
   const [selectedEmployees, setSelectedEmployees] = useState([]);
-
-  // =========================
-  // DEFAULT FILTER = CURRENT MONTH + CURRENT YEAR
-  // =========================
+ 
   const [recentFilterMonth, setRecentFilterMonth] = useState(currentMonthName);
   const [recentFilterYear, setRecentFilterYear] = useState(String(currentYearValue));
-
-  // =========================
-  // FRONTEND PAGINATION STATES
-  // =========================
+ 
   const [recentPage, setRecentPage] = useState(1);
   const [recentRowsPerPage, setRecentRowsPerPage] = useState(10);
   const [recentLoading, setRecentLoading] = useState(false);
-
+ 
   const token = localStorage.getItem("token");
-
+ 
   const months = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
-
+ 
   const years = Array.from({ length: 10 }, (_, i) => 2022 + i);
-
+ 
   const [manualForm, setManualForm] = useState({
     totalWorkingDays: "",
     lopDays: "",
     otherDeductions: ""
   });
-
+ 
   useEffect(() => {
     fetchEmployees();
     fetchRecentPayslips();
   }, []);
-
+ 
   useEffect(() => {
     if (successMsg || errorMsg) {
       const timer = setTimeout(() => {
         setSuccessMsg("");
         setErrorMsg("");
       }, 3000);
-
       return () => clearTimeout(timer);
     }
   }, [successMsg, errorMsg]);
-
-  // Reset page when filter / rows changes
+ 
   useEffect(() => {
     setRecentPage(1);
   }, [recentFilterMonth, recentFilterYear, recentRowsPerPage]);
-
-  // =========================
-  // SAFE DATE PARSER
-  // =========================
+ 
   const parseDateSafely = (dateString) => {
     if (!dateString) return null;
-
-    if (dateString instanceof Date && !isNaN(dateString.getTime())) {
-      return dateString;
-    }
-
+    if (dateString instanceof Date && !isNaN(dateString.getTime())) return dateString;
+ 
     const raw = String(dateString).trim();
-
     const match = raw.match(
       /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ ,T]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/
     );
-
+ 
     if (match) {
       const day = parseInt(match[1], 10);
       const month = parseInt(match[2], 10) - 1;
@@ -109,96 +91,68 @@ function Payroll() {
       const hour = parseInt(match[4] || "0", 10);
       const minute = parseInt(match[5] || "0", 10);
       const second = parseInt(match[6] || "0", 10);
-
+ 
       const parsed = new Date(year, month, day, hour, minute, second);
       if (!isNaN(parsed.getTime())) return parsed;
     }
-
+ 
     const fallback = new Date(raw);
     return !isNaN(fallback.getTime()) ? fallback : null;
   };
-
+ 
   const fetchEmployees = async () => {
     try {
       const res = await api.get(API_ENDPOINTS.payroll.employees, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
-
       const empData = Array.isArray(res.data) ? res.data : res.data?.data || [];
       setEmployees(empData);
-
-      if (empData.length > 0) {
-        setSelectedEmp(empData[0]);
-      }
+      if (empData.length > 0) setSelectedEmp(empData[0]);
     } catch (err) {
       console.error("❌ Employees fetch error:", err.response?.data || err.message);
       setErrorMsg("Failed to fetch employees");
     }
   };
-
-  // =========================
-  // FETCH ALL PAYSLIPS (NO BACKEND FILTER / PAGINATION)
-  // =========================
+ 
   const fetchRecentPayslips = useCallback(async () => {
     try {
       setRecentLoading(true);
-
       const res = await api.get(API_ENDPOINTS.payroll.recent, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
-
+ 
       const responseData = res.data;
-
       const payslipData =
         responseData?.data ||
         responseData?.items ||
         responseData?.records ||
         (Array.isArray(responseData) ? responseData : []);
-
+ 
       const normalized = payslipData
         .map((p) => {
           const generatedDate =
-            p.generated_On ||
-            p.generatedOn ||
-            p.generatedDate ||
-            p.createdOn ||
-            p.createdDate ||
-            p.generatedAt ||
-            p.createdAt;
-
+            p.generated_On || p.generatedOn || p.generatedDate ||
+            p.createdOn || p.createdDate || p.generatedAt || p.createdAt;
+ 
           const parsedDate = parseDateSafely(generatedDate);
-
           const normalizedMonth =
             p.month && months.includes(p.month)
               ? p.month
-              : parsedDate
-                ? months[parsedDate.getMonth()]
-                : "";
-
+              : parsedDate ? months[parsedDate.getMonth()] : "";
+ 
           const normalizedYear =
             p.year && !isNaN(Number(p.year))
               ? Number(p.year)
-              : parsedDate
-                ? parsedDate.getFullYear()
-                : "";
-
+              : parsedDate ? parsedDate.getFullYear() : "";
+ 
           return {
             ...p,
-            netPay:
-              p.netPay ||
-              p.netSalary ||
-              p.totalNet ||
-              (p.ctc ? p.ctc / 12 : 0),
+            netPay: p.netPay || p.netSalary || p.totalNet || (p.ctc ? p.ctc / 12 : 0),
             generatedDate,
             parsedGeneratedDate: parsedDate,
             month: normalizedMonth,
             year: normalizedYear,
-            OtherDeductions:
-              p.OtherDeductions ?? p.otherDeductions ?? p.deduction ?? 0
+            OtherDeductions: p.OtherDeductions ?? p.otherDeductions ?? p.deduction ?? 0
           };
         })
         .sort((a, b) => {
@@ -206,7 +160,7 @@ function Payroll() {
           const dateB = b.parsedGeneratedDate ? b.parsedGeneratedDate.getTime() : 0;
           return dateB - dateA;
         });
-
+ 
       setAllPayslips(normalized);
     } catch (err) {
       console.error("❌ Recent payslips fetch error:", err.response?.data || err.message);
@@ -216,32 +170,23 @@ function Payroll() {
       setRecentLoading(false);
     }
   }, [token]);
-
+ 
   const getMonthYearList = (count, selectedMonth, selectedYear) => {
     const selectedMonthIndex = months.findIndex((m) => m === selectedMonth);
     const result = [];
-
+ 
     for (let i = 0; i < count; i++) {
       let monthIndex = selectedMonthIndex - i;
       let currentYear = Number(selectedYear);
-
       while (monthIndex < 0) {
         monthIndex += 12;
         currentYear -= 1;
       }
-
-      result.push({
-        month: months[monthIndex],
-        year: currentYear
-      });
+      result.push({ month: months[monthIndex], year: currentYear });
     }
-
     return result;
   };
-
-  // =========================
-  // FILTERED EMPLOYEES
-  // =========================
+ 
   const filteredEmployees = useMemo(() => {
     return employees.filter((emp) => {
       const keyword = search.toLowerCase();
@@ -251,204 +196,146 @@ function Payroll() {
       );
     });
   }, [employees, search]);
-
+ 
   const selectedEmployeeObjects = useMemo(() => {
     return employees.filter((emp) => selectedEmployees.includes(emp.employee_Id));
   }, [employees, selectedEmployees]);
-
-  // =========================
-  // FRONTEND FILTERING
-  // =========================
+ 
   const filteredPayslips = useMemo(() => {
     return allPayslips.filter((p) => {
-      const monthMatch =
-        recentFilterMonth === "All" || p.month === recentFilterMonth;
-
-      const yearMatch =
-        recentFilterYear === "All" || String(p.year) === String(recentFilterYear);
-
+      const monthMatch = recentFilterMonth === "All" || p.month === recentFilterMonth;
+      const yearMatch = recentFilterYear === "All" || String(p.year) === String(recentFilterYear);
       return monthMatch && yearMatch;
     });
   }, [allPayslips, recentFilterMonth, recentFilterYear]);
-
-  // =========================
-  // FRONTEND PAGINATION
-  // =========================
+ 
   const recentTotalCount = filteredPayslips.length;
   const totalRecentPages = Math.max(1, Math.ceil(recentTotalCount / recentRowsPerPage));
-
+ 
   const paginatedRecentPayslips = useMemo(() => {
     const startIndex = (recentPage - 1) * recentRowsPerPage;
     const endIndex = startIndex + recentRowsPerPage;
     return filteredPayslips.slice(startIndex, endIndex);
   }, [filteredPayslips, recentPage, recentRowsPerPage]);
-
+ 
   useEffect(() => {
-    if (recentPage > totalRecentPages) {
-      setRecentPage(totalRecentPages);
-    }
+    if (recentPage > totalRecentPages) setRecentPage(totalRecentPages);
   }, [recentPage, totalRecentPages]);
-
+ 
   const getVisiblePages = () => {
     const pages = [];
     const maxVisible = 5;
-
     let start = Math.max(1, recentPage - 2);
     let end = Math.min(totalRecentPages, start + maxVisible - 1);
-
-    if (end - start < maxVisible - 1) {
-      start = Math.max(1, end - maxVisible + 1);
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-
+    if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1);
+    for (let i = start; i <= end; i++) pages.push(i);
     return pages;
   };
-
-  // =========================
-  // MULTI SELECT LOGIC
-  // =========================
+ 
   const handleToggleEmployee = (employeeId) => {
     if (generating) return;
-
     setSelectedEmployees((prev) => {
       const alreadySelected = prev.includes(employeeId);
-      let updated;
-
-      if (alreadySelected) {
-        updated = prev.filter((id) => id !== employeeId);
-      } else {
-        updated = [...prev, employeeId];
-      }
-
+      let updated = alreadySelected
+        ? prev.filter((id) => id !== employeeId)
+        : [...prev, employeeId];
+ 
       if (updated.length === 1) {
         const onlyEmp = employees.find((e) => e.employee_Id === updated[0]);
         setSelectedEmp(onlyEmp || null);
       } else {
         setSelectedEmp(null);
       }
-
       return updated;
     });
   };
-
+ 
   const handleSelectAll = () => {
     if (generating) return;
-
     const visibleIds = filteredEmployees.map((emp) => emp.employee_Id);
-
     const allVisibleSelected =
-      visibleIds.length > 0 &&
-      visibleIds.every((id) => selectedEmployees.includes(id));
-
-    if (allVisibleSelected) {
-      const updated = selectedEmployees.filter((id) => !visibleIds.includes(id));
-      setSelectedEmployees(updated);
-
-      if (updated.length === 1) {
-        const onlyEmp = employees.find((e) => e.employee_Id === updated[0]);
-        setSelectedEmp(onlyEmp || null);
-      } else {
-        setSelectedEmp(null);
-      }
+      visibleIds.length > 0 && visibleIds.every((id) => selectedEmployees.includes(id));
+ 
+    const updated = allVisibleSelected
+      ? selectedEmployees.filter((id) => !visibleIds.includes(id))
+      : [...new Set([...selectedEmployees, ...visibleIds])];
+ 
+    setSelectedEmployees(updated);
+    if (updated.length === 1) {
+      const onlyEmp = employees.find((e) => e.employee_Id === updated[0]);
+      setSelectedEmp(onlyEmp || null);
     } else {
-      const updated = [...new Set([...selectedEmployees, ...visibleIds])];
-      setSelectedEmployees(updated);
-
-      if (updated.length === 1) {
-        const onlyEmp = employees.find((e) => e.employee_Id === updated[0]);
-        setSelectedEmp(onlyEmp || null);
-      } else {
-        setSelectedEmp(null);
-      }
+      setSelectedEmp(null);
     }
   };
-
+ 
   const allFilteredSelected =
     filteredEmployees.length > 0 &&
     filteredEmployees.every((emp) => selectedEmployees.includes(emp.employee_Id));
-
+ 
   const handleCardClick = (emp) => {
     if (generating) return;
     setSelectedEmp(emp);
   };
-
-  // =========================
-  // GENERATE PAYSLIP
-  // =========================
+ 
   const handleGeneratePayslip = async () => {
     if (generating) return;
-
+ 
     const employeeIds =
       selectedEmployees.length > 0
         ? selectedEmployees
-        : selectedEmp
-          ? [selectedEmp.employee_Id]
-          : [];
-
+        : selectedEmp ? [selectedEmp.employee_Id] : [];
+ 
     if (employeeIds.length === 0) {
       setErrorMsg("Please select employee(s)");
       return;
     }
-
+ 
     try {
       setGenerating(true);
       setSuccessMsg("");
       setErrorMsg("");
-
+ 
       if (generationMode === "auto") {
         const periods = getMonthYearList(selectedPeriod, month, year);
         const deductionValue = Number(deduction) || 0;
-
+ 
         for (const employeeId of employeeIds) {
           for (const period of periods) {
             await api.post(API_ENDPOINTS.payroll.generate, null, {
               params: {
                 employeeId,
                 year: period.year,
-                month: months.indexOf(period.month) + 1,
+                month: period.month,
                 OtherDeductions: deductionValue
               },
-              headers: {
-                Authorization: `Bearer ${token}`,
-              }
+              headers: { Authorization: `Bearer ${token}` }
             });
           }
         }
-
-        setSuccessMsg(
-          `Payslips generated for ${employeeIds.length} employee(s) for ${selectedPeriod} month(s)`
-        );
+        setSuccessMsg(`Payslips generated for ${employeeIds.length} employee(s) for ${selectedPeriod} month(s)`);
       } else {
         for (const employeeId of employeeIds) {
           const payload = {
             employeeId,
-            month: months.indexOf(month) + 1, // ✅ FIXED
+            month,
             year: Number(year),
             totalWorkingDays: Number(manualForm.totalWorkingDays) || 0,
             lopDays: Number(manualForm.lopDays) || 0,
             otherDeductions: Number(manualForm.otherDeductions) || 0
           };
-
+ 
           await api.post(API_ENDPOINTS.payroll.manualGenerate, payload, {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
+              "Content-Type": "application/json"
             }
           });
         }
-
         setSuccessMsg(`Manual payslips generated for ${employeeIds.length} employee(s)`);
-
-        setManualForm({
-          totalWorkingDays: "",
-          lopDays: "",
-          otherDeductions: ""
-        });
+        setManualForm({ totalWorkingDays: "", lopDays: "", otherDeductions: "" });
       }
-
+ 
       setRecentPage(1);
       await fetchRecentPayslips();
     } catch (err) {
@@ -458,32 +345,22 @@ function Payroll() {
       setGenerating(false);
     }
   };
-
+ 
   const handleManualInputChange = (e) => {
     if (generating) return;
-
     const { name, value } = e.target;
-    setManualForm((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+    setManualForm((prev) => ({ ...prev, [name]: value }));
   };
-
+ 
   const handleDownloadPayslip = async (id) => {
     try {
-      const response = await api.get(
-        buildApiUrl(API_ENDPOINTS.payroll.download(id)),
-        {
-          responseType: "blob",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        }
-      );
-
+      const response = await api.get(buildApiUrl(API_ENDPOINTS.payroll.download(id)), {
+        responseType: "blob",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+ 
       const blob = new Blob([response.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
-
       const link = document.createElement("a");
       link.href = url;
       link.download = `Payslip_${id}.pdf`;
@@ -491,20 +368,27 @@ function Payroll() {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-
     } catch (error) {
       console.error("Download failed:", error);
     }
   };
-
-
+ 
   const isBulkMode = selectedEmployees.length > 1;
-
   const previewEmployee =
-    selectedEmployees.length === 1
-      ? selectedEmployeeObjects[0]
-      : selectedEmp;
-
+    selectedEmployees.length === 1 ? selectedEmployeeObjects[0] : selectedEmp;
+ 
+  // ✅ FIX: Helper to get CTC from payslip or fallback to employee record
+  const getCtcValue = (payslip, emp) => {
+    // Check payslip first, then employee record
+    const ctc = payslip?.ctc ?? emp?.ctc ?? payslip?.annualCTC ?? emp?.annualCTC;
+    return ctc != null && ctc !== "" && ctc !== 0 ? Number(ctc) : null;
+  };
+ 
+  const formatCurrency = (val) => {
+    if (val == null || val === "" || val === 0) return "-";
+    return `₹${Number(val).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+ 
   return (
     <div className="payroll-page">
       {/* LEFT PANEL */}
@@ -519,7 +403,7 @@ function Payroll() {
           onChange={(e) => setSearch(e.target.value)}
           disabled={generating}
         />
-
+ 
         <div className="select-all-row">
           <label className="select-all-label">
             <input
@@ -534,19 +418,18 @@ function Payroll() {
             </span>
           </label>
         </div>
-
+ 
         <div className="employee-list">
           {filteredEmployees.map((emp) => {
             const isChecked = selectedEmployees.includes(emp.employee_Id);
             const isActive =
               selectedEmp?.employee_Id === emp.employee_Id ||
               (selectedEmployees.length === 1 && isChecked);
-
+ 
             return (
               <div
                 key={emp.employee_Id}
-                className={`employee-card ${isActive ? "active" : ""} ${generating ? "disabled-card" : ""
-                  }`}
+                className={`employee-card ${isActive ? "active" : ""} ${generating ? "disabled-card" : ""}`}
                 onClick={() => handleCardClick(emp)}
               >
                 <div className="employee-left">
@@ -560,20 +443,18 @@ function Payroll() {
                     }}
                     onClick={(e) => e.stopPropagation()}
                   />
-
                   <div>
                     <strong>{emp.name}</strong>
                     <p>{emp.employee_Id}</p>
                   </div>
                 </div>
-
                 <span className="dept">{emp.department}</span>
               </div>
             );
           })}
         </div>
       </div>
-
+ 
       {/* RIGHT PANEL */}
       {(selectedEmp || selectedEmployees.length > 0) && (
         <div className="payroll-content">
@@ -583,7 +464,7 @@ function Payroll() {
               <p>Generating payslip(s)... Please wait</p>
             </div>
           )}
-
+ 
           <div className={`employee-header ${generating ? "panel-disabled" : ""}`}>
             {!isBulkMode ? (
               <>
@@ -595,7 +476,6 @@ function Payroll() {
                     .substring(0, 2)
                     .toUpperCase()}
                 </div>
-
                 <div className="employee-header-info">
                   <h3>{previewEmployee?.name || "Employee"}</h3>
                   <p>
@@ -614,10 +494,9 @@ function Payroll() {
                   </p>
                 </div>
               </>
-            ) : (
+  ) : (
               <>
                 <div className="avatar bulk-avatar">{selectedEmployees.length}</div>
-
                 <div className="employee-header-info">
                   <h3>{selectedEmployees.length} Employees Selected</h3>
                   <p>
@@ -633,7 +512,7 @@ function Payroll() {
                 </div>
               </>
             )}
-
+ 
             <div className="mode-dropdown-wrapper">
               <label>Payslip Mode</label>
               <select
@@ -647,19 +526,18 @@ function Payroll() {
               </select>
             </div>
           </div>
-
+ 
           {(successMsg || errorMsg) && (
             <div className={errorMsg ? "error-message" : "success-message"}>
               {successMsg || errorMsg}
             </div>
           )}
-
+ 
           {/* AUTO MODE */}
           {generationMode === "auto" && (
             <>
               <div className="ctc-card">
                 <label>DEDUCTION (₹)</label>
-
                 <input
                   type="number"
                   min="0"
@@ -668,12 +546,11 @@ function Payroll() {
                   placeholder="Enter Deduction"
                   disabled={generating}
                 />
-
                 <small className="helper-text">
                   Current Deduction: ₹{Number(deduction) || 0}
                 </small>
               </div>
-
+ 
               <div className="generate-card">
                 <h4>
                   Generate Payslip
@@ -683,11 +560,10 @@ function Payroll() {
                       : "Single Employee"}
                   </span>
                 </h4>
-
+ 
                 <div className="period-section">
                   <div className="standard-periods">
                     <label>STANDARD PERIODS</label>
-
                     <div className="period-buttons">
                       {[1, 3, 6, 12].map((period) => (
                         <button
@@ -702,10 +578,9 @@ function Payroll() {
                       ))}
                     </div>
                   </div>
-
+ 
                   <div className="specific-period">
                     <label>SPECIFIC PERIOD</label>
-
                     <div className="period-buttons">
                       <select
                         value={year}
@@ -718,7 +593,7 @@ function Payroll() {
                           </option>
                         ))}
                       </select>
-
+ 
                       <select
                         value={month}
                         onChange={(e) => setMonth(e.target.value)}
@@ -733,7 +608,7 @@ function Payroll() {
                     </div>
                   </div>
                 </div>
-
+ 
                 <button
                   className="generate-btn"
                   onClick={handleGeneratePayslip}
@@ -748,7 +623,7 @@ function Payroll() {
               </div>
             </>
           )}
-
+ 
           {/* MANUAL MODE */}
           {generationMode === "manual" && (
             <div className="generate-card">
@@ -777,7 +652,7 @@ function Payroll() {
                     </select>
                   </div>
                 </div>
-
+ 
                 <div className="specific-period">
                   <label>YEAR</label>
                   <div className="period-buttons">
@@ -795,7 +670,7 @@ function Payroll() {
                   </div>
                 </div>
               </div>
-
+ 
               <div className="manual-fields-grid">
                 {[
                   ["totalWorkingDays", "Total Working Days"],
@@ -816,7 +691,7 @@ function Payroll() {
                   </div>
                 ))}
               </div>
-
+ 
               <button
                 className="generate-btn"
                 onClick={handleGeneratePayslip}
@@ -831,12 +706,10 @@ function Payroll() {
               </button>
             </div>
           )}
-
-          {/* RECENT PAYSLIPS */}
+   {/* RECENT PAYSLIPS TABLE */}
           <div className="recent-table">
             <div className="recent-table-header">
               <h4>Recently Generated</h4>
-
               <div className="recent-filters">
                 <select
                   value={recentFilterMonth}
@@ -850,7 +723,7 @@ function Payroll() {
                     </option>
                   ))}
                 </select>
-
+ 
                 <select
                   value={recentFilterYear}
                   onChange={(e) => setRecentFilterYear(e.target.value)}
@@ -863,7 +736,7 @@ function Payroll() {
                     </option>
                   ))}
                 </select>
-
+ 
                 <select
                   value={recentRowsPerPage}
                   onChange={(e) => setRecentRowsPerPage(Number(e.target.value))}
@@ -876,32 +749,22 @@ function Payroll() {
                 </select>
               </div>
             </div>
-
+ 
             <div className="table-scroll">
               <table>
-                <colgroup>
-                  <col className="employee-col" />
-                  <col className="department-col" />
-                  <col className="period-col" />
-                  <col className="numeric-col" />
-                  <col className="numeric-col" />
-                  <col className="numeric-col" />
-                  <col className="generated-col" />
-                  <col className="action-col" />
-                </colgroup>
                 <thead>
                   <tr>
-                    <th>Employee</th>
-                    <th>Department</th>
-                    <th>Period</th>
-                    <th className="numeric align-right">Net Pay</th>
-                    <th className="numeric align-right">Deduction</th>
-                    <th className="numeric align-right">CTC</th>
-                    <th className="generated-col">Generated</th>
-                    <th className="action-col center align-center">Actions</th>
+                    <th style={{ textAlign: "left", width: "240px" }}>Employee</th>
+                    <th style={{ textAlign: "left", width: "160px" }}>Department</th>
+                    <th style={{ textAlign: "left", width: "140px" }}>Period</th>
+                    <th style={{ textAlign: "right", width: "160px" }}>Net Pay</th>
+                    <th style={{ textAlign: "right", width: "160px" }}>Deduction</th>
+                    <th style={{ textAlign: "right", width: "160px" }}>CTC</th>
+                    <th style={{ textAlign: "left", width: "220px" }}>Generated</th>
+                    <th style={{ textAlign: "center", width: "120px" }}>Actions</th>
                   </tr>
                 </thead>
-
+ 
                 <tbody>
                   {recentLoading ? (
                     <tr>
@@ -918,46 +781,49 @@ function Payroll() {
                   ) : (
                     paginatedRecentPayslips.map((p, index) => {
                       const emp = employees.find((e) => e.employee_Id === p.employeeId);
-
+                      const ctcValue = getCtcValue(p, emp);
+ 
                       return (
                         <tr key={p.id || index}>
-                          <td>
+                          <td style={{ textAlign: "left", width: "240px" }}>
                             <div className="emp-name">
                               {emp?.name || p.employeeName || p.employeeId}
                             </div>
                             <div className="empid">{p.employeeId}</div>
                           </td>
-
-                          <td>{emp?.department || p.department || "-"}</td>
-
-                          <td>
+ 
+                          <td style={{ textAlign: "left", width: "160px" }}>
+                            {emp?.department || p.department || "-"}
+                          </td>
+ 
+                          <td style={{ textAlign: "left", width: "140px" }}>
                             {p.month || "-"} {p.year || ""}
                           </td>
-
-                          <td className="numeric align-right">
+ 
+                          <td style={{ textAlign: "right", width: "160px" }}>
                             <span className="currency">
-                              ₹{p.netPay ? Number(p.netPay).toLocaleString("en-IN") : "-"}
+                              {formatCurrency(p.netPay)}
                             </span>
                           </td>
-
-                          <td className="numeric align-right">
+ 
+                          <td style={{ textAlign: "right", width: "160px" }}>
                             <span className="currency">
-                              ₹{Number(
-                                p.OtherDeductions ??
-                                p.otherDeductions ??
-                                p.deduction ??
-                                0
-                              ).toLocaleString("en-IN")}
+                              {formatCurrency(
+                                p.OtherDeductions ?? p.otherDeductions ?? p.deduction
+                              )}
                             </span>
                           </td>
-
-                          <td className="numeric align-right">
+ 
+                          {/* ✅ FIXED: CTC now checks payslip first, then employee record */}
+                          <td style={{ textAlign: "right", width: "160px" }}>
                             <span className="currency">
-                              ₹{p.ctc ? Number(p.ctc).toLocaleString("en-IN") : "-"}
+                              {ctcValue != null
+                                ? `${Number(ctcValue).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                                : "-"}
                             </span>
                           </td>
-
-                          <td className="generated-col">
+ 
+                          <td style={{ textAlign: "left", width: "220px" }}>
                             {p.parsedGeneratedDate
                               ? p.parsedGeneratedDate.toLocaleString("en-IN", {
                                 year: "numeric",
@@ -970,8 +836,8 @@ function Payroll() {
                               })
                               : "-"}
                           </td>
-
-                          <td className="center align-center action-cell">
+ 
+                          <td style={{ textAlign: "center", width: "120px" }}>
                             <div className="action-icons">
                               <FaDownload
                                 className="download-icon"
@@ -986,7 +852,7 @@ function Payroll() {
                 </tbody>
               </table>
             </div>
-
+ 
             {/* PAGINATION */}
             {recentTotalCount > 0 && (
               <div className="pagination-wrapper">
@@ -998,7 +864,7 @@ function Payroll() {
                   </strong>{" "}
                   of <strong>{recentTotalCount}</strong>
                 </div>
-
+ 
                 <div className="pagination-controls">
                   <button
                     onClick={() => setRecentPage(1)}
@@ -1006,14 +872,14 @@ function Payroll() {
                   >
                     <FaAnglesLeft />
                   </button>
-
+ 
                   <button
                     onClick={() => setRecentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={recentPage === 1}
                   >
                     <FaAngleLeft />
                   </button>
-
+ 
                   {getVisiblePages().map((pageNum) => (
                     <button
                       key={pageNum}
@@ -1023,7 +889,7 @@ function Payroll() {
                       {pageNum}
                     </button>
                   ))}
-
+ 
                   <button
                     onClick={() =>
                       setRecentPage((prev) => Math.min(prev + 1, totalRecentPages))
@@ -1032,7 +898,7 @@ function Payroll() {
                   >
                     <FaAngleRight />
                   </button>
-
+ 
                   <button
                     onClick={() => setRecentPage(totalRecentPages)}
                     disabled={recentPage === totalRecentPages || totalRecentPages === 0}
@@ -1048,5 +914,7 @@ function Payroll() {
     </div>
   );
 }
-
+ 
 export default Payroll;
+ 
+ 
