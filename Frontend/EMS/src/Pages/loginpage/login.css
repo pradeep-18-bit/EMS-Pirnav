@@ -209,3 +209,10 @@
   justify-content: center;
 }
 
+
+/* Remove default password reveal icon in Edge */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
